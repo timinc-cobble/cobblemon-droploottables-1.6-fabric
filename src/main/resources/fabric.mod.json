@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "cobblemon_droploottables",
-  "version": "1.5-fabric-1.0.0",
+  "version": "1.5-fabric-1.1.0",
   "name": "Cobblemon Drop Loot Tables",
   "description": "Grants EXP for your team when you capture a wild Pokemon",
   "authors": [
