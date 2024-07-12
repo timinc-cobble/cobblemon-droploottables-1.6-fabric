@@ -1,4 +1,4 @@
-package us.timinc.mc.cobblemon.droploottables.implementation.cobblemon
+package us.timinc.mc.cobblemon.droploottables.implementation.cobblemon.dropentries
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.drop.DropEntry
@@ -50,5 +50,4 @@ open class DynamicItemDropEntry(
             world.spawnEntity(ItemEntity(world, pos.x, pos.y, pos.z, stack))
         }
     }
-
 }
