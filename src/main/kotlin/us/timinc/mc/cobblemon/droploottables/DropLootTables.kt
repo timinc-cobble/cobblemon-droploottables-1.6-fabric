@@ -8,7 +8,6 @@ import net.fabricmc.api.ModInitializer
 import net.minecraft.loot.LootDataType
 import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
