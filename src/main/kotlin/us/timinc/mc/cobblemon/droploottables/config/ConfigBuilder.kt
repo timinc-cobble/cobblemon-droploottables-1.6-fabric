@@ -1,4 +1,4 @@
-package us.timinc.mc.config
+package us.timinc.mc.cobblemon.droploottables.config
 
 import com.google.gson.GsonBuilder
 import java.io.File

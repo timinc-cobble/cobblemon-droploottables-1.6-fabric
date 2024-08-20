@@ -41,7 +41,6 @@ object DropLootTables : ModInitializer {
                 ), mapOf(), 0F
             )
 
-            println(pokemon.species.resourceIdentifier.path)
             val speciesDropId =
                 modIdentifier("gameplay/pokedrops/species/${pokemon.species.resourceIdentifier.path}")
             if (lootManager.getIds(LootDataType.LOOT_TABLES).contains(speciesDropId)) {
