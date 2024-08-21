@@ -43,4 +43,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-src/main/resources/data/droploottables/loot_tables/gameplay/pokedrops
+src/main/resources/data/droploottables/loot_tables/gameplay
