@@ -1,6 +1,8 @@
 package us.timinc.mc.cobblemon.droploottables.implementation.minecraft.lootconditions
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
+import com.cobblemon.mod.common.api.types.ElementalType
+import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
@@ -19,6 +21,7 @@ import us.timinc.mc.cobblemon.droploottables.toIntRange
 object LootConditions {
     val POKEMON_PROPERTIES: LootConditionType = LootConditionType(PokemonPropertiesLootCondition.Companion.Serializer())
     val POKEMON_LEVEL: LootConditionType = LootConditionType(PokemonLevelLootCondition.Companion.Serializer())
+    val POKEMON_TYPE: LootConditionType = LootConditionType(PokemonElementalTypeLootCondition.Companion.Serializer())
 
     object PARAMS {
         val SLAIN_POKEMON: LootContextParameter<Pokemon> =
@@ -31,6 +34,9 @@ object LootConditions {
         )
         Registry.register(
             Registries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_level"), POKEMON_LEVEL
+        )
+        Registry.register(
+            Registries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_type"), POKEMON_TYPE
         )
     }
 }
@@ -110,4 +116,42 @@ class PokemonLevelLootCondition(
     override fun getType(): LootConditionType {
         return LootConditions.POKEMON_LEVEL
     }
+}
+
+class PokemonElementalTypeLootCondition(
+    val types: List<ElementalType>
+) : LootCondition {
+    companion object {
+        object KEYS {
+            const val ELEMENTAL_TYPE = "element"
+        }
+
+        class Serializer : JsonSerializer<PokemonElementalTypeLootCondition> {
+            override fun toJson(
+                jsonObject: JsonObject,
+                lootCondition: PokemonElementalTypeLootCondition,
+                jsonSerializationContext: JsonSerializationContext
+            ) {
+                jsonObject.addProperty(KEYS.ELEMENTAL_TYPE, lootCondition.types.joinToString(",") { it.name })
+            }
+
+            override fun fromJson(
+                jsonObject: JsonObject, jsonDeserializationContext: JsonDeserializationContext
+            ): PokemonElementalTypeLootCondition {
+                val list: String = if (jsonObject.has(KEYS.ELEMENTAL_TYPE)) JsonHelper.getString(
+                    jsonObject, KEYS.ELEMENTAL_TYPE
+                ) else ""
+                return PokemonElementalTypeLootCondition(list.split(",").map { ElementalTypes.getOrException(it) })
+            }
+        }
+    }
+
+    override fun test(context: LootContext): Boolean {
+        val pokemon: Pokemon = context.get(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemonTypes = pokemon.types
+        println(pokemonTypes)
+        return types.any(pokemonTypes::contains)
+    }
+
+    override fun getType(): LootConditionType = LootConditions.POKEMON_TYPE
 }
