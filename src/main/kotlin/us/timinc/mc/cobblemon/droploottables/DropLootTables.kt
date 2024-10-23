@@ -78,7 +78,10 @@ object DropLootTables : ModInitializer {
             world, mapOf(
                 LootContextParameters.ORIGIN to position,
                 LootContextParameters.KILLER_ENTITY to player,
-                LootConditions.PARAMS.SLAIN_POKEMON to pokemon
+                LootConditions.PARAMS.SLAIN_POKEMON to pokemon,
+                LootContextParameters.THIS_ENTITY to pokemon.entity,
+                LootContextParameters.DIRECT_KILLER_ENTITY to player,
+                LootContextParameters.LAST_DAMAGE_PLAYER to pokemon.entity?.lastAttacker
             ), mapOf(), 0F
         )
 
