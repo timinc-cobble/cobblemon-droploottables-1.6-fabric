@@ -20,6 +20,12 @@ import us.timinc.mc.cobblemon.droploottables.config.MainConfig
 import us.timinc.mc.cobblemon.droploottables.implementation.cobblemon.dropentries.DynamicItemDropEntry
 import us.timinc.mc.cobblemon.droploottables.implementation.minecraft.lootconditions.LootConditions
 
+enum class Result {
+    REPLACE,
+    ADD,
+    NOTHING
+}
+
 object DropLootTables : ModInitializer {
     @Suppress("MemberVisibilityCanBePrivate")
     const val MOD_ID = "droploottables"
@@ -34,20 +40,20 @@ object DropLootTables : ModInitializer {
             val dropperEntity = event.entity ?: return@subscribe
             if (dropperEntity !is PokemonEntity) return@subscribe
 
-            val results = getDrops(
+            val (results, resultType) = getDrops(
                 world,
                 dropperEntity.pos,
                 dropperEntity.pokemon,
                 "pokedrops",
                 event.player,
             )
-            event.drops.clear()
+            if (resultType === Result.REPLACE) event.drops.clear()
             event.drops.addAll(results.map(::DynamicItemDropEntry))
         }
         CobblemonEvents.POKEMON_RELEASED_EVENT_POST.subscribe(Priority.LOWEST) { event ->
             val world = event.player.world
             if (world !is ServerWorld) return@subscribe
-            val results = getDrops(
+            val (results) = getDrops(
                 world,
                 event.player.pos,
                 event.pokemon,
@@ -64,8 +70,9 @@ object DropLootTables : ModInitializer {
         pokemon: Pokemon,
         dropType: String,
         player: ServerPlayerEntity?,
-    ): List<ItemStack> {
+    ): Pair<List<ItemStack>, Result> {
         val lootManager = world.server.lootManager
+        var result = Result.NOTHING
 
         val lootContextParameterSet = LootContextParameterSet(
             world, mapOf(
@@ -79,6 +86,7 @@ object DropLootTables : ModInitializer {
         val speciesDropId =
             modIdentifier("gameplay/$dropType/species/${pokemon.species.resourceIdentifier.path}")
         if (lootManager.getIds(LootDataType.LOOT_TABLES).contains(speciesDropId)) {
+            result = Result.REPLACE
             debug("Switching to loot table drops $dropType for species ${pokemon.species.resourceIdentifier.path}...")
             val lootTable = lootManager.getLootTable(speciesDropId)
             val list = lootTable.generateLoot(
@@ -89,6 +97,7 @@ object DropLootTables : ModInitializer {
 
         val globalDropId = modIdentifier("gameplay/$dropType/all")
         if (lootManager.getIds(LootDataType.LOOT_TABLES).contains(globalDropId)) {
+            if (result === Result.NOTHING) result = Result.ADD
             val lootTable = lootManager.getLootTable((globalDropId))
             val list = lootTable.generateLoot(
                 lootContextParameterSet
@@ -96,8 +105,8 @@ object DropLootTables : ModInitializer {
             results.addAll(list)
         }
 
-        debug("Drop results: ${results.map { "${it.name.string}${if (it.nbt != null) "{${it.nbt.toString()}}" else ""} x ${it.count}" }}")
-        return results
+        debug("Drop results: ($result) ${results.map { "${it.name.string}${if (it.nbt != null) "{${it.nbt.toString()}}" else ""} x ${it.count}" }}")
+        return Pair(results, result)
     }
 
     fun modIdentifier(name: String): Identifier {
