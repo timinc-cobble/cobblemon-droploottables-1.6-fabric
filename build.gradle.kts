@@ -1,7 +1,7 @@
 plugins {
     id("java")
-    id("fabric-loom") version("1.4-SNAPSHOT")
-    kotlin("jvm") version ("1.8.20")
+    id("fabric-loom") version("1.9-SNAPSHOT")
+    kotlin("jvm") version ("2.1.0")
 }
 
 group = property("maven_group")!!
@@ -44,13 +44,13 @@ tasks {
     }
 
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
 
     compileJava {
         java {
             toolchain {
-                languageVersion.set(JavaLanguageVersion.of("17"))
+                languageVersion.set(JavaLanguageVersion.of("21"))
             }
         }
     }

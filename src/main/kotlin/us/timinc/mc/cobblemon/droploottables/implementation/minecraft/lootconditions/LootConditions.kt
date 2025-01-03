@@ -4,24 +4,27 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.toProperties
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
+import com.mojang.serialization.Codec
+import com.mojang.serialization.MapCodec
+import com.mojang.serialization.codecs.ListCodec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.loot.condition.LootCondition
 import net.minecraft.loot.condition.LootConditionType
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameter
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
-import net.minecraft.util.JsonHelper
-import net.minecraft.util.JsonSerializer
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 import us.timinc.mc.cobblemon.droploottables.toIntRange
 
 object LootConditions {
-    val POKEMON_PROPERTIES: LootConditionType = LootConditionType(PokemonPropertiesLootCondition.Companion.Serializer())
-    val POKEMON_LEVEL: LootConditionType = LootConditionType(PokemonLevelLootCondition.Companion.Serializer())
-    val POKEMON_TYPE: LootConditionType = LootConditionType(PokemonElementalTypeLootCondition.Companion.Serializer())
+    val POKEMON_PROPERTIES: LootConditionType = LootConditionType(PokemonPropertiesLootCondition.CODEC)
+    val POKEMON_LEVEL: LootConditionType = LootConditionType(PokemonLevelLootCondition.CODEC)
+    val POKEMON_TYPE: LootConditionType = LootConditionType(PokemonElementalTypeLootCondition.CODEC)
 
     object PARAMS {
         val SLAIN_POKEMON: LootContextParameter<Pokemon> =
@@ -42,30 +45,17 @@ object LootConditions {
 }
 
 class PokemonPropertiesLootCondition(
-    val properties: PokemonProperties
+    val properties: PokemonProperties,
 ) : LootCondition {
     companion object {
         object KEYS {
             const val PROPERTIES = "properties"
         }
 
-        class Serializer : JsonSerializer<PokemonPropertiesLootCondition> {
-            override fun toJson(
-                jsonObject: JsonObject,
-                lootCondition: PokemonPropertiesLootCondition,
-                jsonSerializationContext: JsonSerializationContext
-            ) {
-                jsonObject.addProperty(KEYS.PROPERTIES, lootCondition.properties.originalString)
-            }
-
-            override fun fromJson(
-                jsonObject: JsonObject, jsonDeserializationContext: JsonDeserializationContext
-            ): PokemonPropertiesLootCondition {
-                val pokemonProperties: String = if (jsonObject.has(KEYS.PROPERTIES)) JsonHelper.getString(
-                    jsonObject, KEYS.PROPERTIES
-                ) else ""
-                return PokemonPropertiesLootCondition(PokemonProperties.parse(pokemonProperties))
-            }
+        val CODEC: MapCodec<PokemonPropertiesLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties.originalString }
+            ).apply(instance) { PokemonPropertiesLootCondition(it.toProperties()) }
         }
     }
 
@@ -80,30 +70,17 @@ class PokemonPropertiesLootCondition(
 }
 
 class PokemonLevelLootCondition(
-    val range: IntRange
+    val range: IntRange,
 ) : LootCondition {
     companion object {
         object KEYS {
             const val RANGE = "range"
         }
 
-        class Serializer : JsonSerializer<PokemonLevelLootCondition> {
-            override fun toJson(
-                jsonObject: JsonObject,
-                lootCondition: PokemonLevelLootCondition,
-                jsonSerializationContext: JsonSerializationContext
-            ) {
-                jsonObject.addProperty(KEYS.RANGE, lootCondition.range.toString())
-            }
-
-            override fun fromJson(
-                jsonObject: JsonObject, jsonDeserializationContext: JsonDeserializationContext
-            ): PokemonLevelLootCondition {
-                val range: String = if (jsonObject.has(KEYS.RANGE)) JsonHelper.getString(
-                    jsonObject, KEYS.RANGE
-                ) else "0..0"
-                return PokemonLevelLootCondition(toIntRange(range))
-            }
+        val CODEC: MapCodec<PokemonLevelLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
+            ).apply(instance) { PokemonLevelLootCondition(toIntRange(it)) }
         }
     }
 
@@ -119,30 +96,17 @@ class PokemonLevelLootCondition(
 }
 
 class PokemonElementalTypeLootCondition(
-    val types: List<ElementalType>
+    val types: List<ElementalType>,
 ) : LootCondition {
     companion object {
         object KEYS {
             const val ELEMENTAL_TYPE = "element"
         }
 
-        class Serializer : JsonSerializer<PokemonElementalTypeLootCondition> {
-            override fun toJson(
-                jsonObject: JsonObject,
-                lootCondition: PokemonElementalTypeLootCondition,
-                jsonSerializationContext: JsonSerializationContext
-            ) {
-                jsonObject.addProperty(KEYS.ELEMENTAL_TYPE, lootCondition.types.joinToString(",") { it.name })
-            }
-
-            override fun fromJson(
-                jsonObject: JsonObject, jsonDeserializationContext: JsonDeserializationContext
-            ): PokemonElementalTypeLootCondition {
-                val list: String = if (jsonObject.has(KEYS.ELEMENTAL_TYPE)) JsonHelper.getString(
-                    jsonObject, KEYS.ELEMENTAL_TYPE
-                ) else ""
-                return PokemonElementalTypeLootCondition(list.split(",").map { ElementalTypes.getOrException(it) })
-            }
+        val CODEC: MapCodec<PokemonElementalTypeLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+            instance.group(
+                ElementalType.BY_STRING_CODEC.listOf().fieldOf(KEYS.ELEMENTAL_TYPE).forGetter(PokemonElementalTypeLootCondition::types)
+            ).apply(instance, ::PokemonElementalTypeLootCondition)
         }
     }
 
