@@ -1,16 +1,11 @@
-package us.timinc.mc.cobblemon.droploottables.implementation.minecraft.lootconditions
+package us.timinc.mc.cobblemon.droploottables.lootconditions
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.types.ElementalType
-import com.cobblemon.mod.common.api.types.ElementalTypes
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.toProperties
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonObject
-import com.google.gson.JsonSerializationContext
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
-import com.mojang.serialization.codecs.ListCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.loot.condition.LootCondition
 import net.minecraft.loot.condition.LootConditionType

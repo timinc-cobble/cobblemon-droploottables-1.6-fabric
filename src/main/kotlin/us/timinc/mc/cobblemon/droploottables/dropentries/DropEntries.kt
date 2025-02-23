@@ -1,4 +1,4 @@
-package us.timinc.mc.cobblemon.droploottables.implementation.cobblemon.dropentries
+package us.timinc.mc.cobblemon.droploottables.dropentries
 
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.drop.DropEntry

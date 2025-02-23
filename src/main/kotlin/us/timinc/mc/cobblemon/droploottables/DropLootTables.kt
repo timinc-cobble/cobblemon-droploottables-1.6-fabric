@@ -8,12 +8,8 @@ import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.server
 import net.fabricmc.api.ModInitializer
 import net.minecraft.item.ItemStack
-import net.minecraft.loot.LootDataType
-import net.minecraft.loot.LootTable
 import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.registry.BuiltinRegistries
-import net.minecraft.registry.Registries
 import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.network.ServerPlayerEntity
@@ -22,8 +18,8 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
 import us.timinc.mc.cobblemon.droploottables.config.ConfigBuilder
 import us.timinc.mc.cobblemon.droploottables.config.MainConfig
-import us.timinc.mc.cobblemon.droploottables.implementation.cobblemon.dropentries.DynamicItemDropEntry
-import us.timinc.mc.cobblemon.droploottables.implementation.minecraft.lootconditions.LootConditions
+import us.timinc.mc.cobblemon.droploottables.dropentries.DynamicItemDropEntry
+import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
 enum class Result {
     REPLACE,
