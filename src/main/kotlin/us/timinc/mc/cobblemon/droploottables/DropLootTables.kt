@@ -7,15 +7,15 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.giveOrDropItemStack
 import com.cobblemon.mod.common.util.server
 import net.fabricmc.api.ModInitializer
-import net.minecraft.item.ItemStack
-import net.minecraft.loot.context.LootContextParameterSet
-import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.registry.RegistryKey
-import net.minecraft.registry.RegistryKeys
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3d
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams
+import net.minecraft.world.phys.Vec3
 import us.timinc.mc.cobblemon.droploottables.config.ConfigBuilder
 import us.timinc.mc.cobblemon.droploottables.config.MainConfig
 import us.timinc.mc.cobblemon.droploottables.dropentries.DynamicItemDropEntry
@@ -36,14 +36,14 @@ object DropLootTables : ModInitializer {
         config = ConfigBuilder.load(MainConfig::class.java, MOD_ID)
         LootConditions.register()
         CobblemonEvents.LOOT_DROPPED.subscribe(Priority.LOWEST) { event ->
-            val world = event.player?.world ?: event.entity?.world ?: server()?.overworld ?: return@subscribe
-            if (world !is ServerWorld) return@subscribe
+            val world = event.player?.level() ?: event.entity?.level() ?: server()?.overworld() ?: return@subscribe
+            if (world !is ServerLevel) return@subscribe
             val dropperEntity = event.entity ?: return@subscribe
             if (dropperEntity !is PokemonEntity) return@subscribe
 
             val (results, resultType) = getDrops(
                 world,
-                dropperEntity.pos,
+                dropperEntity.position(),
                 dropperEntity.pokemon,
                 "pokedrops",
                 event.player,
@@ -52,11 +52,11 @@ object DropLootTables : ModInitializer {
             event.drops.addAll(results.map(::DynamicItemDropEntry))
         }
         CobblemonEvents.POKEMON_RELEASED_EVENT_POST.subscribe(Priority.LOWEST) { event ->
-            val world = event.player.world
-            if (world !is ServerWorld) return@subscribe
+            val world = event.player.level()
+            if (world !is ServerLevel) return@subscribe
             val (results) = getDrops(
                 world,
-                event.player.pos,
+                event.player.position(),
                 event.pokemon,
                 "releasedrops",
                 event.player,
@@ -66,23 +66,23 @@ object DropLootTables : ModInitializer {
     }
 
     fun getDrops(
-        world: ServerWorld,
-        position: Vec3d,
+        world: ServerLevel,
+        position: Vec3,
         pokemon: Pokemon,
         dropType: String,
-        player: ServerPlayerEntity?,
+        player: ServerPlayer?,
     ): Pair<List<ItemStack>, Result> {
-        val lootManager = world.server.reloadableRegistries.getIds(RegistryKeys.LOOT_TABLE)
+        val lootManager = world.server.reloadableRegistries().getKeys(Registries.LOOT_TABLE)
         var result = Result.NOTHING
 
-        val lootContextParameterSet = LootContextParameterSet(
+        val lootContextParameterSet = LootParams(
             world, mapOf(
-                LootContextParameters.ORIGIN to position,
-                LootContextParameters.ATTACKING_ENTITY to player,
+                LootContextParams.ORIGIN to position,
+                LootContextParams.ATTACKING_ENTITY to player,
                 LootConditions.PARAMS.SLAIN_POKEMON to pokemon,
-                LootContextParameters.THIS_ENTITY to pokemon.entity,
-                LootContextParameters.DIRECT_ATTACKING_ENTITY to player,
-                LootContextParameters.LAST_DAMAGE_PLAYER to pokemon.entity?.lastAttacker
+                LootContextParams.THIS_ENTITY to pokemon.entity,
+                LootContextParams.DIRECT_ATTACKING_ENTITY to player,
+                LootContextParams.LAST_DAMAGE_PLAYER to pokemon.entity?.lastAttacker
             ), mapOf(), 0F
         )
 
@@ -92,8 +92,10 @@ object DropLootTables : ModInitializer {
         if (lootManager.contains(speciesDropId)) {
             result = Result.REPLACE
             debug("Switching to loot table drops $dropType for species ${pokemon.species.resourceIdentifier.path}...")
-            val lootTable = world.server.reloadableRegistries.getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, speciesDropId))
-            val list = lootTable.generateLoot(
+            val lootTable = world.server.reloadableRegistries().getLootTable(
+                ResourceKey.create(Registries.LOOT_TABLE, speciesDropId)
+            )
+            val list = lootTable.getRandomItems(
                 lootContextParameterSet
             )
             results.addAll(list)
@@ -102,19 +104,21 @@ object DropLootTables : ModInitializer {
         val globalDropId = modIdentifier("gameplay/$dropType/all")
         if (lootManager.contains(globalDropId)) {
             if (result === Result.NOTHING) result = Result.ADD
-            val lootTable = world.server.reloadableRegistries.getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE, globalDropId))
-            val list = lootTable.generateLoot(
+            val lootTable = world.server.reloadableRegistries().getLootTable(
+                ResourceKey.create(Registries.LOOT_TABLE, globalDropId)
+            )
+            val list = lootTable.getRandomItems(
                 lootContextParameterSet
             )
             results.addAll(list)
         }
 
-        debug("Drop results: ($result) ${results.map { it.name.string }}")
+        debug("Drop results: ($result) ${results.map { it.displayName.string }}")
         return Pair(results, result)
     }
 
-    fun modIdentifier(name: String): Identifier {
-        return Identifier.of(MOD_ID, name)
+    fun modIdentifier(name: String): ResourceLocation {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name)
     }
 
     fun debug(msg: String) {

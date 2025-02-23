@@ -1,31 +1,33 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.loot.condition.LootConditionType
-import net.minecraft.loot.context.LootContextParameter
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
-    val POKEMON_PROPERTIES: LootConditionType = LootConditionType(PokemonPropertiesLootCondition.CODEC)
-    val POKEMON_LEVEL: LootConditionType = LootConditionType(PokemonLevelLootCondition.CODEC)
-    val POKEMON_TYPE: LootConditionType = LootConditionType(PokemonElementalTypeLootCondition.CODEC)
+    val POKEMON_PROPERTIES: LootItemConditionType = LootItemConditionType(PokemonPropertiesLootCondition.CODEC)
+    val POKEMON_LEVEL: LootItemConditionType = LootItemConditionType(PokemonLevelLootCondition.CODEC)
+    val POKEMON_TYPE: LootItemConditionType = LootItemConditionType(PokemonElementalTypeLootCondition.CODEC)
 
     object PARAMS {
-        val SLAIN_POKEMON: LootContextParameter<Pokemon> =
-            LootContextParameter(DropLootTables.modIdentifier("slain_pokemon"))
+        val SLAIN_POKEMON: LootContextParam<Pokemon> =
+            LootContextParam(DropLootTables.modIdentifier("slain_pokemon"))
     }
 
     fun register() {
         Registry.register(
-            Registries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_properties"), POKEMON_PROPERTIES
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("pokemon_properties"),
+            POKEMON_PROPERTIES
         )
         Registry.register(
-            Registries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_level"), POKEMON_LEVEL
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_level"), POKEMON_LEVEL
         )
         Registry.register(
-            Registries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_type"), POKEMON_TYPE
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_type"), POKEMON_TYPE
         )
     }
 }

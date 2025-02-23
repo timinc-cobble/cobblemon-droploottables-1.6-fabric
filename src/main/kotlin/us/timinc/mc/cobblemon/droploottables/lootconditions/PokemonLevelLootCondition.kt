@@ -4,14 +4,14 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.loot.condition.LootCondition
-import net.minecraft.loot.condition.LootConditionType
-import net.minecraft.loot.context.LootContext
+import net.minecraft.world.level.storage.loot.LootContext
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.toIntRange
 
 class PokemonLevelLootCondition(
     val range: IntRange,
-) : LootCondition {
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val RANGE = "range"
@@ -25,12 +25,12 @@ class PokemonLevelLootCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.get(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.SLAIN_POKEMON)!!
         val pokemonLevel = pokemon.level
         return range.contains(pokemonLevel)
     }
 
-    override fun getType(): LootConditionType {
+    override fun getType(): LootItemConditionType {
         return LootConditions.POKEMON_LEVEL
     }
 }

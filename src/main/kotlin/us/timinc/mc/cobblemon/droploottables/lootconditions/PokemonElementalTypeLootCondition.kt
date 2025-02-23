@@ -4,13 +4,13 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.loot.condition.LootCondition
-import net.minecraft.loot.condition.LootConditionType
-import net.minecraft.loot.context.LootContext
+import net.minecraft.world.level.storage.loot.LootContext
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class PokemonElementalTypeLootCondition(
     val types: List<ElementalType>,
-) : LootCondition {
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val ELEMENTAL_TYPE = "element"
@@ -25,10 +25,10 @@ class PokemonElementalTypeLootCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.get(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.SLAIN_POKEMON)!!
         val pokemonTypes = pokemon.types
         return types.any(pokemonTypes::contains)
     }
 
-    override fun getType(): LootConditionType = LootConditions.POKEMON_TYPE
+    override fun getType(): LootItemConditionType = LootConditions.POKEMON_TYPE
 }
