@@ -25,7 +25,7 @@ class PokemonElementalTypeLootCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
         val pokemonTypes = pokemon.types
         return types.any(pokemonTypes::contains)
     }

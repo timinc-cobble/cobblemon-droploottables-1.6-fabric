@@ -11,10 +11,13 @@ object LootConditions {
     val POKEMON_PROPERTIES: LootItemConditionType = LootItemConditionType(PokemonPropertiesLootCondition.CODEC)
     val POKEMON_LEVEL: LootItemConditionType = LootItemConditionType(PokemonLevelLootCondition.CODEC)
     val POKEMON_TYPE: LootItemConditionType = LootItemConditionType(PokemonElementalTypeLootCondition.CODEC)
+    val WAS_IN_BATTLE: LootItemConditionType = LootItemConditionType(WasInBattleCondition.CODEC)
 
     object PARAMS {
-        val SLAIN_POKEMON: LootContextParam<Pokemon> =
-            LootContextParam(DropLootTables.modIdentifier("slain_pokemon"))
+        val POKEMON_DETAILS: LootContextParam<Pokemon> =
+            LootContextParam(DropLootTables.modIdentifier("pokemon"))
+        val WAS_IN_BATTLE: LootContextParam<Boolean> =
+            LootContextParam(DropLootTables.modIdentifier("was_in_battle"))
     }
 
     fun register() {
@@ -28,6 +31,9 @@ object LootConditions {
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_type"), POKEMON_TYPE
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("was_in_battle"), WAS_IN_BATTLE
         )
     }
 }

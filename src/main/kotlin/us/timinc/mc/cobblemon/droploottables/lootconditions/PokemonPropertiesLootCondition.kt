@@ -26,7 +26,7 @@ class PokemonPropertiesLootCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
         return properties.matches(pokemon)
     }
 

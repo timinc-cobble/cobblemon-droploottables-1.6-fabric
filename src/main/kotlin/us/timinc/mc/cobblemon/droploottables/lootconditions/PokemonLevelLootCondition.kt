@@ -25,7 +25,7 @@ class PokemonLevelLootCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.SLAIN_POKEMON)!!
+        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
         val pokemonLevel = pokemon.level
         return range.contains(pokemonLevel)
     }
