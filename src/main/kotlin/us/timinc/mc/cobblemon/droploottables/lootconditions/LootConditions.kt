@@ -13,6 +13,7 @@ object LootConditions {
     val POKEMON_TYPE: LootItemConditionType = LootItemConditionType(PokemonElementalTypeLootCondition.CODEC)
     val WAS_IN_BATTLE: LootItemConditionType = LootItemConditionType(WasInBattleCondition.CODEC)
     val POKEMON_LABEL: LootItemConditionType = LootItemConditionType(PokemonLabelCondition.CODEC)
+    val EGG_GROUP: LootItemConditionType = LootItemConditionType(EggGroupCondition.CODEC)
 
     object PARAMS {
         val POKEMON_DETAILS: LootContextParam<Pokemon> =
@@ -38,6 +39,9 @@ object LootConditions {
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("pokemon_label"), POKEMON_LABEL
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("egg_group"), EGG_GROUP
         )
     }
 }
