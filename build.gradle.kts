@@ -28,6 +28,9 @@ dependencies {
 
     // Cobblemon
     modImplementation("com.cobblemon:fabric:${property("cobblemon_version")}")
+
+    // Counter
+    modImplementation("maven.modrinth:cobblemon-counter:${property("counter_version")}")
 }
 
 tasks {

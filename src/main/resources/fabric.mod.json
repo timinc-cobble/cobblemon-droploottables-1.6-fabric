@@ -22,5 +22,8 @@
     "minecraft": "1.21.1",
     "fabric": "*",
     "cobblemon": ">=1.6.0 <1.7.0"
-  }
+  },
+  "mixins": [
+    "droploottables.mixins.json"
+  ]
 }
