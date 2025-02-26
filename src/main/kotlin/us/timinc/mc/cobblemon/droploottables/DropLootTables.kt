@@ -6,6 +6,7 @@ import us.timinc.mc.cobblemon.droploottables.droppers.Droppers
 import us.timinc.mc.cobblemon.droploottables.config.ConfigBuilder
 import us.timinc.mc.cobblemon.droploottables.config.MainConfig
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
+import us.timinc.mc.cobblemon.droploottables.lootconditions.counter.CounterLootConditions
 
 object DropLootTables : ModInitializer {
     @Suppress("MemberVisibilityCanBePrivate")
@@ -16,6 +17,10 @@ object DropLootTables : ModInitializer {
         config = ConfigBuilder.load(MainConfig::class.java, MOD_ID)
         LootConditions.register()
         Droppers.load()
+    }
+
+    fun initializeCounter() {
+        CounterLootConditions.register()
     }
 
     fun modIdentifier(name: String): ResourceLocation {
