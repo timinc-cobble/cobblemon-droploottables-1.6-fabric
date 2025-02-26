@@ -4,10 +4,11 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
-object CaptureDropper : AbstractDropper("capture") {
+object CaptureDropper : AbstractFormDropper("capture") {
     override fun load() {
         CobblemonEvents.POKEMON_CAPTURED.subscribe { event ->
             val level = event.pokemon.entity?.level() ?: event.player.level()
@@ -27,7 +28,7 @@ object CaptureDropper : AbstractDropper("capture") {
             )
             val drops = getDrops(
                 lootParams,
-                event.pokemon.form
+                FormDropContext(event.pokemon.form)
             )
 
             giveDropsToPlayer(drops, event.player)

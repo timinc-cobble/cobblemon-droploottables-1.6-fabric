@@ -7,11 +7,12 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
 import us.timinc.mc.cobblemon.droploottables.dropentries.DynamicItemDropEntry
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
-object KoDropper : AbstractDropper("ko") {
+object KoDropper : AbstractFormDropper("ko") {
     override fun load() {
         CobblemonEvents.LOOT_DROPPED.subscribe(Priority.LOWEST) { event ->
 
@@ -42,7 +43,7 @@ object KoDropper : AbstractDropper("ko") {
             )
             val drops = getDrops(
                 lootParams,
-                form
+                FormDropContext(form)
             )
 
             if (lootTableExists(level, getFormDropId(form))) {

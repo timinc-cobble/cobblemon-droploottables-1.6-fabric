@@ -6,10 +6,11 @@ import com.cobblemon.mod.common.util.giveOrDropItemStack
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
+import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
-object ReleaseDropper : AbstractDropper("release") {
+object ReleaseDropper : AbstractFormDropper("release") {
     override fun load() {
         CobblemonEvents.POKEMON_RELEASED_EVENT_POST.subscribe(Priority.LOWEST) { event ->
             val level = event.player.level()
@@ -24,7 +25,8 @@ object ReleaseDropper : AbstractDropper("release") {
                 ), mapOf(), event.player.luck
             )
             val drops = getDrops(
-                lootParams, event.pokemon.form
+                lootParams,
+                FormDropContext(event.pokemon.form)
             )
 
             drops.forEach(event.player::giveOrDropItemStack)
