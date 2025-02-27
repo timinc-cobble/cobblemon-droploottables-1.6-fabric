@@ -5,5 +5,6 @@ object Droppers {
         CaptureDropper.load()
         KoDropper.load()
         ReleaseDropper.load()
+        FossilRevivedDropper.load()
     }
 }
