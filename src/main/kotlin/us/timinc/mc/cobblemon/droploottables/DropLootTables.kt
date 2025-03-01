@@ -2,9 +2,9 @@ package us.timinc.mc.cobblemon.droploottables
 
 import net.fabricmc.api.ModInitializer
 import net.minecraft.resources.ResourceLocation
-import us.timinc.mc.cobblemon.droploottables.droppers.Droppers
 import us.timinc.mc.cobblemon.droploottables.config.ConfigBuilder
 import us.timinc.mc.cobblemon.droploottables.config.MainConfig
+import us.timinc.mc.cobblemon.droploottables.droppers.Droppers
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 import us.timinc.mc.cobblemon.droploottables.lootconditions.counter.CounterLootConditions
 
