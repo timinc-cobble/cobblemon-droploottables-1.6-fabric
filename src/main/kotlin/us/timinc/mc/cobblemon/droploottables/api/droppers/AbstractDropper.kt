@@ -10,9 +10,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.storage.loot.LootParams
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
 
-abstract class AbstractDropper<T : DropContext>(
-    open val dropType: String,
-) {
+abstract class AbstractDropper<T : DropContext>(open val dropType: String, open val modId: String) {
     abstract fun load()
 
     abstract fun getDrops(params: LootParams, context: T): List<ItemStack>
