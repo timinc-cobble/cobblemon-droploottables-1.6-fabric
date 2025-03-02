@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "cobblemon_droploottables",
-  "version": "1.6-fabric-1.0.0",
+  "version": "1.6-fabric-1.1.0",
   "name": "Cobblemon Drop Loot Tables",
   "description": "Customize Pokémon loot drops using Minecraft's loot tables.",
   "authors": [
@@ -22,5 +22,8 @@
     "minecraft": "1.21.1",
     "fabric": "*",
     "cobblemon": ">=1.6.0 <1.7.0"
-  }
+  },
+  "mixins": [
+    "droploottables.mixins.json"
+  ]
 }

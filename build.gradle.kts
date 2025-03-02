@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft_version")}")
-    mappings("net.fabricmc:yarn:${property("yarn_mappings")}")
+    mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
 
     // Fabric API
@@ -28,6 +28,9 @@ dependencies {
 
     // Cobblemon
     modImplementation("com.cobblemon:fabric:${property("cobblemon_version")}")
+
+    // Counter
+    modImplementation("maven.modrinth:cobblemon-counter:${property("counter_version")}")
 }
 
 tasks {
