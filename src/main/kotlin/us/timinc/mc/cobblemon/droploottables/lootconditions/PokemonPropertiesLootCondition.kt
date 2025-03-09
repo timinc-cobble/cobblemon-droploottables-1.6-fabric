@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class PokemonPropertiesLootCondition(
-    val properties: PokemonProperties,
+    val properties: String,
 ) : LootItemCondition {
     companion object {
         object KEYS {
@@ -20,13 +20,14 @@ class PokemonPropertiesLootCondition(
 
         val CODEC: MapCodec<PokemonPropertiesLootCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties.originalString }
-            ).apply(instance) { PokemonPropertiesLootCondition(it.toProperties()) }
+                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties }
+            ).apply(instance) { PokemonPropertiesLootCondition(it) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
+        val properties: PokemonProperties = PokemonProperties.parse(properties)
         return properties.matches(pokemon)
     }
 
