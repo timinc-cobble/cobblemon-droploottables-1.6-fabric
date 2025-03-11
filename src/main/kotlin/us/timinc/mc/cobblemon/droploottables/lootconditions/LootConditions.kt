@@ -9,6 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val POKEMON_FRIENDSHIP: LootItemConditionType = LootItemConditionType(FriendshipLevelCondition.CODEC)
     val POKEMON_PROPERTIES: LootItemConditionType = LootItemConditionType(PokemonPropertiesLootCondition.CODEC)
     val POKEMON_LEVEL: LootItemConditionType = LootItemConditionType(PokemonLevelLootCondition.CODEC)
     val POKEMON_TYPE: LootItemConditionType = LootItemConditionType(PokemonElementalTypeLootCondition.CODEC)
@@ -42,6 +43,9 @@ object LootConditions {
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("egg_group"), EGG_GROUP
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("friendship"), POKEMON_FRIENDSHIP
         )
     }
 }
