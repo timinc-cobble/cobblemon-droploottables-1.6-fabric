@@ -16,13 +16,12 @@ import us.timinc.mc.cobblemon.droploottables.DropLootTables.config
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
 import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
 import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
+import us.timinc.mc.cobblemon.droploottables.events.DropLootTablesEvents
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
 object KoDropper : AbstractFormDropper("ko") {
     override fun load() {
-        CobblemonEvents.POKEMON_FAINTED.subscribe(Priority.LOWEST) { event ->
-            if (!event.pokemon.isWild()) return@subscribe
-
+        DropLootTablesEvents.WILD_POKEMON_FAINTED.subscribe(Priority.LOWEST) { event ->
             val dropperEntity = event.pokemon.entity ?: return@subscribe
             val player = dropperEntity.killer
             val level = dropperEntity.level()
