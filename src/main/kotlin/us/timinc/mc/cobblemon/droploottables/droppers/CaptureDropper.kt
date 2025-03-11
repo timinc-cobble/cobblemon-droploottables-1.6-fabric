@@ -21,7 +21,7 @@ object CaptureDropper : AbstractFormDropper("capture") {
                     LootContextParams.ORIGIN to dropperEntity.position(),
                     LootContextParams.THIS_ENTITY to dropperEntity,
                     LootConditions.PARAMS.POKEMON_DETAILS to event.pokemon,
-                    LootContextParams.DIRECT_ATTACKING_ENTITY to event.player
+                    LootContextParams.ATTACKING_ENTITY to event.player
                 ),
                 mapOf(),
                 event.player.luck

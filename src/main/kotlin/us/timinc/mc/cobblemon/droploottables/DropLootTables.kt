@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation
 import us.timinc.mc.cobblemon.droploottables.config.ConfigBuilder
 import us.timinc.mc.cobblemon.droploottables.config.MainConfig
 import us.timinc.mc.cobblemon.droploottables.droppers.Droppers
+import us.timinc.mc.cobblemon.droploottables.events.DropLootTablesEventHandlers
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 import us.timinc.mc.cobblemon.droploottables.lootconditions.counter.CounterLootConditions
 
@@ -17,6 +18,7 @@ object DropLootTables : ModInitializer {
         config = ConfigBuilder.load(MainConfig::class.java, MOD_ID)
         LootConditions.register()
         Droppers.load()
+        DropLootTablesEventHandlers.register()
     }
 
     fun initializeCounter() {
