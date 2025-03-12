@@ -2,7 +2,6 @@ package us.timinc.mc.cobblemon.droploottables.lootconditions
 
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.util.toProperties
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder

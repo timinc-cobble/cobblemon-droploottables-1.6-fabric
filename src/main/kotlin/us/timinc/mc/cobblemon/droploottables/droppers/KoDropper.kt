@@ -2,7 +2,6 @@ package us.timinc.mc.cobblemon.droploottables.droppers
 
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
-import com.cobblemon.mod.common.api.events.CobblemonEvents
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -10,8 +9,6 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
-import net.minecraft.world.phys.Vec3
-import us.timinc.mc.cobblemon.droploottables.DropLootTables
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.config
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
 import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper

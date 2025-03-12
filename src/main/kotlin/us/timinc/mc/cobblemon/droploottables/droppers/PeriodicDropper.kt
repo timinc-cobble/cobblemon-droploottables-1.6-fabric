@@ -8,6 +8,7 @@ import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.config
+import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
 import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
 import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
 import us.timinc.mc.cobblemon.droploottables.events.DropLootTablesEvents
@@ -50,7 +51,7 @@ object PeriodicDropper : AbstractFormDropper("periodic") {
 
     private fun getDropTimer(pokemon: Pokemon): Int {
         val range = config.getGranularDropPeriodFor(pokemon) ?: IntRange(6000, 12000)
-        println("Got range $range from ${pokemon.species}")
+        debug("Got range $range from ${pokemon.species}")
         return range.random()
     }
 

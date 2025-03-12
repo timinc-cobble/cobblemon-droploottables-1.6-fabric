@@ -10,5 +10,7 @@ class MainConfig {
     var granularDropPeriods: Map<String, String> = mapOf()
 
     fun getGranularDropPeriodFor(pokemon: Pokemon): IntRange? =
-        granularDropPeriods.entries.find { (k) -> PokemonProperties.parse(k).matches(pokemon) }?.value?.let(::toIntRange)
+        granularDropPeriods.entries.find { (k) ->
+            PokemonProperties.parse(k).matches(pokemon)
+        }?.value?.let(::toIntRange)
 }
