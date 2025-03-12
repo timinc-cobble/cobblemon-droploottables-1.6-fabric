@@ -2,6 +2,7 @@ package us.timinc.mc.cobblemon.droploottables
 
 import com.cobblemon.mod.common.pokemon.OriginalTrainerType
 import com.cobblemon.mod.common.pokemon.Pokemon
+import com.cobblemon.mod.common.util.math.FloatRange
 
 fun toIntRange(str: String): IntRange {
     val (start, end) = str.split("..")
@@ -10,6 +11,16 @@ fun toIntRange(str: String): IntRange {
         start.toInt()..end.toInt()
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not integers", e)
+    }
+}
+
+fun toFloatRange(str: String): FloatRange {
+    val (start, end) = str.split("..")
+
+    return try {
+        FloatRange(start.toFloat(), end.toFloat())
+    } catch (e: NumberFormatException) {
+        throw IllegalArgumentException("'$start' and/or '$end' is/are not Floats", e)
     }
 }
 
