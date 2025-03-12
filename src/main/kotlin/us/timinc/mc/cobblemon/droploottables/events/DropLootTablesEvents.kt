@@ -3,6 +3,7 @@ package us.timinc.mc.cobblemon.droploottables.events
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.reactive.EventObservable
 import com.cobblemon.mod.common.api.reactive.Observable.Companion.filter
+import us.timinc.mc.cobblemon.droploottables.isActuallyWild
 
 object DropLootTablesEvents {
     @JvmField
@@ -11,12 +12,12 @@ object DropLootTablesEvents {
     @JvmField
     val WILD_POKEMON_TICKED = POKEMON_TICKED
         .pipe(
-            filter { it.entity.pokemon.isWild() }
+            filter { isActuallyWild(it.entity.pokemon) }
         )
 
     @JvmField
     val WILD_POKEMON_FAINTED = CobblemonEvents.POKEMON_FAINTED
         .pipe(
-            filter { it.pokemon.isWild() }
+            filter { isActuallyWild(it.pokemon) }
         )
 }
