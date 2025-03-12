@@ -9,6 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val PERSISTENT_DATA_RANGE: LootItemConditionType = LootItemConditionType(PersistentDataRangeCondition.CODEC)
     val PERSISTENT_DATA: LootItemConditionType = LootItemConditionType(PersistentDataCondition.CODEC)
     val POKEMON_FRIENDSHIP: LootItemConditionType = LootItemConditionType(FriendshipLevelCondition.CODEC)
     val POKEMON_PROPERTIES: LootItemConditionType = LootItemConditionType(PokemonPropertiesLootCondition.CODEC)
@@ -50,6 +51,9 @@ object LootConditions {
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("persistent_data"), PERSISTENT_DATA
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("persistent_data_range"), PERSISTENT_DATA_RANGE
         )
     }
 }
