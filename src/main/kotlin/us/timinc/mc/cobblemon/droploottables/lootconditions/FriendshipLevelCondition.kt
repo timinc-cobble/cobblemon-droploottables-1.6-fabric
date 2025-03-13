@@ -1,6 +1,5 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
@@ -8,29 +7,30 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class PokemonPropertiesLootCondition(
-    val properties: String,
+class FriendshipLevelCondition(
+    val range: IntRange,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val PROPERTIES = "properties"
+            const val RANGE = "range"
         }
 
-        val CODEC: MapCodec<PokemonPropertiesLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<FriendshipLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties }
-            ).apply(instance) { PokemonPropertiesLootCondition(it) }
+                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
+            ).apply(instance) { FriendshipLevelCondition(toIntRange(it)) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
-        val properties: PokemonProperties = PokemonProperties.parse(properties)
-        return properties.matches(pokemon)
+        val pokemonFriendship = pokemon.friendship
+        return range.contains(pokemonFriendship)
     }
 
     override fun getType(): LootItemConditionType {
-        return LootConditions.POKEMON_PROPERTIES
+        return LootConditions.POKEMON_FRIENDSHIP
     }
 }

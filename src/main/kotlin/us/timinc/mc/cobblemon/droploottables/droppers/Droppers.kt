@@ -6,5 +6,7 @@ object Droppers {
         KoDropper.load()
         ReleaseDropper.load()
         FossilRevivedDropper.load()
+        EvolutionDropper.load()
+        PeriodicDropper.load()
     }
 }
