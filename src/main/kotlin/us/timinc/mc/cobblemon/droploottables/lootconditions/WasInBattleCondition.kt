@@ -23,7 +23,7 @@ class WasInBattleCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        return context.getParamOrNull(LootConditions.PARAMS.WAS_IN_BATTLE) ?: false
+        return context.getParamOrNull(LootConditions.PARAMS.WAS_IN_BATTLE) == value
     }
 
     override fun getType(): LootItemConditionType = LootConditions.WAS_IN_BATTLE
