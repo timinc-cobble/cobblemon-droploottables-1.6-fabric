@@ -1,6 +1,7 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
+import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.pokemon.Pokemon
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -21,6 +22,7 @@ object LootConditions {
     val EGG_GROUP: LootItemConditionType = LootItemConditionType(EggGroupCondition.CODEC)
 
     object PARAMS {
+        val POKE_BALL: LootContextParam<PokeBall> = LootContextParam(DropLootTables.modIdentifier("poke_ball"))
         val EVOLUTION: LootContextParam<Evolution> = LootContextParam(DropLootTables.modIdentifier("evolution"))
         val POKEMON_DETAILS: LootContextParam<Pokemon> = LootContextParam(DropLootTables.modIdentifier("pokemon"))
         val WAS_IN_BATTLE: LootContextParam<Boolean> = LootContextParam(DropLootTables.modIdentifier("was_in_battle"))
