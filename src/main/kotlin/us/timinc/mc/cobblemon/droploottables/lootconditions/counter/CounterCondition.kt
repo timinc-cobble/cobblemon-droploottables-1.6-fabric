@@ -43,8 +43,7 @@ class CounterCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val player = context.getParamOrNull(LootContextParams.DIRECT_ATTACKING_ENTITY) ?: return false
-        if (player !is ServerPlayer) return false
+        val player = context.getParamOrNull(LootConditions.PARAMS.RELEVANT_PLAYER) ?: return false
         val pokemonData = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
 
         val speciesId = pokemonData.species.resourceIdentifier
