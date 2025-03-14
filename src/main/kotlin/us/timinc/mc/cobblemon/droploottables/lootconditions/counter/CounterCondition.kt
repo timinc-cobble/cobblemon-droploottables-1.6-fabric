@@ -12,27 +12,28 @@ import us.timinc.mc.cobblemon.counter.CounterMod
 import us.timinc.mc.cobblemon.counter.api.CounterType
 import us.timinc.mc.cobblemon.counter.extensions.getCounterManager
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
+import us.timinc.mc.cobblemon.droploottables.toIntRange
 
 class CounterCondition(
-    val min: Int,
+    val range: IntRange,
     val counterType: CounterType,
     val streak: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val MIN = "min"
+            const val RANGE = "range"
             const val COUNTER_TYPE = "counter_type"
             const val STREAK = "streak"
         }
 
         val CODEC: MapCodec<CounterCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.INT.fieldOf(KEYS.MIN).forGetter(CounterCondition::min),
+                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() },
                 Codec.STRING.fieldOf(KEYS.COUNTER_TYPE).forGetter { it.counterType.type },
                 Codec.BOOL.fieldOf(KEYS.STREAK).orElse(false).forGetter(CounterCondition::streak)
-            ).apply(instance) { min, counterType, streak ->
+            ).apply(instance) { range, counterType, streak ->
                 CounterCondition(
-                    min,
+                    toIntRange(range),
                     CounterType.entries.find { it.type == counterType }
                         ?: throw Error("Counter type $counterType not found"),
                     streak
@@ -63,7 +64,7 @@ class CounterCondition(
                 manager.getCount(counterType, speciesId, formName)
             }
 
-        return value >= min
+        return range.contains(value)
     }
 
     override fun getType(): LootItemConditionType = CounterLootConditions.COUNT_CONDITION

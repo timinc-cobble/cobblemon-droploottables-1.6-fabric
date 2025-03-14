@@ -32,8 +32,8 @@ object DropLootTables : ModInitializer {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, name)
     }
 
-    fun debug(msg: String) {
-        if (!config.debug) {
+    fun debug(msg: String, bypassConfig: Boolean = false) {
+        if (!config.debug && !bypassConfig) {
             return
         }
         println(msg)

@@ -7,30 +7,28 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class PokemonLabelCondition(
-    val labels: List<String>,
-    val all: Boolean = false,
+class LevelCondition(
+    val range: IntRange,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val LABELS = "labels"
-            const val ALL = "all"
+            const val RANGE = "range"
         }
 
-        val CODEC: MapCodec<PokemonLabelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<LevelCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.listOf().fieldOf(KEYS.LABELS).forGetter(PokemonLabelCondition::labels),
-                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(PokemonLabelCondition::all)
-            ).apply(instance, ::PokemonLabelCondition)
+                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
+            ).apply(instance) { LevelCondition(toIntRange(it)) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonLabels = pokemon.form.labels
-        return if (all) labels.all(pokemonLabels::contains) else labels.any(pokemonLabels::contains)
+        val pokemonLevel = pokemon.level
+        return range.contains(pokemonLevel)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LABEL
+    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LEVEL
 }

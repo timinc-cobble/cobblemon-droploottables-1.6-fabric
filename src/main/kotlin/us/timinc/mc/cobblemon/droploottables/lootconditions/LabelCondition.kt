@@ -7,28 +7,30 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class FriendshipLevelCondition(
-    val range: IntRange,
+class LabelCondition(
+    val labels: List<String>,
+    val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val RANGE = "range"
+            const val LABELS = "labels"
+            const val ALL = "all"
         }
 
-        val CODEC: MapCodec<FriendshipLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<LabelCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
-            ).apply(instance) { FriendshipLevelCondition(toIntRange(it)) }
+                Codec.STRING.listOf().fieldOf(KEYS.LABELS).forGetter(LabelCondition::labels),
+                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(LabelCondition::all)
+            ).apply(instance, ::LabelCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonFriendship = pokemon.friendship
-        return range.contains(pokemonFriendship)
+        val pokemonLabels = pokemon.form.labels
+        return if (all) labels.all(pokemonLabels::contains) else labels.any(pokemonLabels::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_FRIENDSHIP
+    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LABEL
 }

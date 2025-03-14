@@ -14,20 +14,26 @@ object FossilRevivedDropper : AbstractFormDropper("resurrect") {
             val level = event.player?.level() ?: return@subscribe
             if (level !is ServerLevel) return@subscribe
             val player = event.player ?: return@subscribe
+            val position = player.position()
+            val pokemon = event.pokemon
+            val pokemonEntity = pokemon.entity
+            val form = pokemon.form
 
             val lootParams = LootParams(
                 level,
                 mapOf(
-                    LootContextParams.ORIGIN to player.position(),
-                    LootContextParams.THIS_ENTITY to player,
-                    LootConditions.PARAMS.POKEMON_DETAILS to event.pokemon
+                    LootContextParams.ORIGIN to position,
+                    LootContextParams.THIS_ENTITY to pokemonEntity,
+                    LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
+                    LootConditions.PARAMS.RELEVANT_PLAYER to player,
                 ),
                 mapOf(),
                 player.luck
             )
+            val context = FormDropContext(form)
             val drops = getDrops(
                 lootParams,
-                FormDropContext(event.pokemon.form)
+                context
             )
 
             giveDropsToPlayer(drops, player)

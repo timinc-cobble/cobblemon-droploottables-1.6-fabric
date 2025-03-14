@@ -11,24 +11,31 @@ import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 object CaptureDropper : AbstractFormDropper("capture") {
     override fun load() {
         CobblemonEvents.POKEMON_CAPTURED.subscribe { event ->
-            val level = event.pokemon.entity?.level() ?: event.player.level()
+            val pokemonEntity = event.pokemon.entity
+            val player = event.player
+            val positionalEntity = pokemonEntity ?: player
+            val level = positionalEntity.level()
             if (level !is ServerLevel) return@subscribe
-            val dropperEntity = event.player
+            val position = positionalEntity.position()
+            val pokemon = event.pokemon
+            val pokeBall = event.pokeBallEntity.pokeBall
 
             val lootParams = LootParams(
                 level,
                 mapOf(
-                    LootContextParams.ORIGIN to dropperEntity.position(),
-                    LootContextParams.THIS_ENTITY to dropperEntity,
-                    LootConditions.PARAMS.POKEMON_DETAILS to event.pokemon,
-                    LootContextParams.ATTACKING_ENTITY to event.player
+                    LootContextParams.ORIGIN to position,
+                    LootContextParams.THIS_ENTITY to pokemonEntity,
+                    LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
+                    LootConditions.PARAMS.RELEVANT_PLAYER to player,
+                    LootConditions.PARAMS.POKE_BALL to pokeBall
                 ),
                 mapOf(),
-                event.player.luck
+                player.luck
             )
+            val context = FormDropContext(event.pokemon.form)
             val drops = getDrops(
                 lootParams,
-                FormDropContext(event.pokemon.form)
+                context
             )
 
             giveDropsToPlayer(drops, event.player)

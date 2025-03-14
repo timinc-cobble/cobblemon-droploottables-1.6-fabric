@@ -8,7 +8,15 @@ fun toIntRange(str: String): IntRange {
     val (start, end) = str.split("..")
 
     return try {
-        start.toInt()..end.toInt()
+        val actualStart = when (start.lowercase()) {
+            "min" -> Int.MIN_VALUE
+            else -> start.toInt()
+        }
+        val actualEnd = when (end.lowercase()) {
+            "max" -> Int.MAX_VALUE
+            else -> end.toInt()
+        }
+        actualStart..actualEnd
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not integers", e)
     }
@@ -18,7 +26,15 @@ fun toFloatRange(str: String): FloatRange {
     val (start, end) = str.split("..")
 
     return try {
-        FloatRange(start.toFloat(), end.toFloat())
+        val actualStart = when (start.lowercase()) {
+            "min" -> Float.MIN_VALUE
+            else -> start.toFloat()
+        }
+        val actualEnd = when (end.lowercase()) {
+            "max" -> Float.MAX_VALUE
+            else -> end.toFloat()
+        }
+        (actualStart..actualEnd) as FloatRange
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not Floats", e)
     }
