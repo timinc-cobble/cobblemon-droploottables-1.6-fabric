@@ -32,5 +32,5 @@ class LabelCondition(
         return if (all) labels.all(pokemonLabels::contains) else labels.any(pokemonLabels::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LABEL
+    override fun getType(): LootItemConditionType = LootConditions.LABEL
 }

@@ -30,5 +30,5 @@ class FriendshipLevelCondition(
         return range.contains(pokemonFriendship)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_FRIENDSHIP
+    override fun getType(): LootItemConditionType = LootConditions.FRIENDSHIP
 }

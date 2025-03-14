@@ -34,5 +34,5 @@ class ElementalTypeCondition(
         return if (all) elements.all(pokemonTypes::contains) else elements.any(pokemonTypes::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_TYPE
+    override fun getType(): LootItemConditionType = LootConditions.TYPE
 }

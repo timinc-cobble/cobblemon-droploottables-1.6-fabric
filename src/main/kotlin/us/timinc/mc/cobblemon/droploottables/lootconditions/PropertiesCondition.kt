@@ -36,5 +36,5 @@ class PropertiesCondition(
         return properties.matches(pokemon)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_PROPERTIES
+    override fun getType(): LootItemConditionType = LootConditions.PROPERTIES
 }

@@ -30,5 +30,5 @@ class LevelCondition(
         return range.contains(pokemonLevel)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LEVEL
+    override fun getType(): LootItemConditionType = LootConditions.LEVEL
 }
