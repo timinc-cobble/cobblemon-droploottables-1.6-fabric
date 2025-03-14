@@ -34,7 +34,7 @@ fun toFloatRange(str: String): FloatRange {
             "max" -> Float.MAX_VALUE
             else -> end.toFloat()
         }
-        (actualStart..actualEnd) as FloatRange
+        FloatRange(actualStart, actualEnd)
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not Floats", e)
     }
