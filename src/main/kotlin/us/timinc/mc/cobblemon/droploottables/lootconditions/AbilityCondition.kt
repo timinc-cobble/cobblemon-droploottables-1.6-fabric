@@ -9,23 +9,23 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class AbilityCondition(
-    val name: List<String>,
+    val abilities: List<String>,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val NAME = "name"
+            const val ABILITIES = "abilities"
         }
 
         val CODEC: MapCodec<AbilityCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.listOf().fieldOf(KEYS.NAME).forGetter(AbilityCondition::name)
+                Codec.STRING.listOf().fieldOf(KEYS.ABILITIES).forGetter(AbilityCondition::abilities)
             ).apply(instance, ::AbilityCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        return name.contains(pokemon.ability.name)
+        return abilities.contains(pokemon.ability.name)
     }
 
     override fun getType(): LootItemConditionType = LootConditions.ABILITY
