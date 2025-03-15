@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class FriendshipLevelCondition(
+class LevelCondition(
     val range: IntRange,
 ) : LootItemCondition {
     companion object {
@@ -17,18 +17,18 @@ class FriendshipLevelCondition(
             const val RANGE = "range"
         }
 
-        val CODEC: MapCodec<FriendshipLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<LevelCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
-            ).apply(instance) { FriendshipLevelCondition(toIntRange(it)) }
+            ).apply(instance) { LevelCondition(toIntRange(it)) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonFriendship = pokemon.friendship
-        return range.contains(pokemonFriendship)
+        val pokemonLevel = pokemon.level
+        return range.contains(pokemonLevel)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.FRIENDSHIP
+    override fun getType(): LootItemConditionType = LootConditions.LEVEL
 }

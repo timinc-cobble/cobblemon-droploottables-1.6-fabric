@@ -19,32 +19,31 @@ object PeriodicDropper : AbstractFormDropper("periodic") {
 
     override fun load() {
         DropLootTablesEvents.POKEMON_TICKED.subscribe { event ->
-            val dropperEntity = event.entity
-            val pokemon = dropperEntity.pokemon
-            val player = pokemon.getOwnerPlayer()
-            val level = dropperEntity.level()
+            val pokemonEntity = event.entity
+            val pokemon = pokemonEntity.pokemon
+            val level = pokemonEntity.level()
             if (level !is ServerLevel) return@subscribe
             if (!isReady(pokemon)) return@subscribe
-            val position = dropperEntity.position()
-            val form = pokemon.form
+            val position = pokemonEntity.position()
 
             val lootParams = LootParams(
                 level,
                 mapOf(
                     LootContextParams.ORIGIN to position,
-                    LootContextParams.THIS_ENTITY to dropperEntity,
+                    LootContextParams.THIS_ENTITY to pokemonEntity,
                     LootConditions.PARAMS.POKEMON_DETAILS to pokemon
                 ),
                 mapOf(),
-                player?.luck ?: 0F
+                0F
             )
+            val context = FormDropContext(pokemon.form)
             val drops = getDrops(
                 lootParams,
-                FormDropContext(form)
+                context
             )
 
             drops.forEach { drop ->
-                level.addFreshEntity(ItemEntity(level, dropperEntity.x, dropperEntity.y, dropperEntity.z, drop))
+                level.addFreshEntity(ItemEntity(level, pokemonEntity.x, pokemonEntity.y, pokemonEntity.z, drop))
             }
         }
     }

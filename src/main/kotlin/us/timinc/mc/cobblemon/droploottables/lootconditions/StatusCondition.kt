@@ -4,31 +4,32 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.toIntRange
+import us.timinc.mc.cobblemon.droploottables.parseWithDefaultedCobblemonNamespace
 
-class FriendshipLevelCondition(
-    val range: IntRange,
+class StatusCondition(
+    val statuses: List<ResourceLocation>,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val RANGE = "range"
+            const val STATUS = "status"
         }
 
-        val CODEC: MapCodec<FriendshipLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<StatusCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
-            ).apply(instance) { FriendshipLevelCondition(toIntRange(it)) }
+                Codec.STRING.listOf().fieldOf(KEYS.STATUS).forGetter { it.statuses.map(ResourceLocation::toString) },
+            ).apply(instance) { StatusCondition(it.map(::parseWithDefaultedCobblemonNamespace)) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonFriendship = pokemon.friendship
-        return range.contains(pokemonFriendship)
+        val pokemonStatus = pokemon.status ?: return false
+        return statuses.contains(pokemonStatus.status.name)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.FRIENDSHIP
+    override fun getType(): LootItemConditionType = LootConditions.STATUS
 }

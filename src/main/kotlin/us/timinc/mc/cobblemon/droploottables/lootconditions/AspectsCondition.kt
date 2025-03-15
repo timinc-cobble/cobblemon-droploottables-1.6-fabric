@@ -7,28 +7,29 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class FriendshipLevelCondition(
-    val range: IntRange,
+class AspectsCondition(
+    val aspects: List<String>,
+    val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val RANGE = "range"
+            const val ASPECTS = "aspects"
+            const val ALL = "all"
         }
 
-        val CODEC: MapCodec<FriendshipLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<AspectsCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
-            ).apply(instance) { FriendshipLevelCondition(toIntRange(it)) }
+                Codec.STRING.listOf().fieldOf(KEYS.ASPECTS).forGetter(AspectsCondition::aspects),
+                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(AspectsCondition::all),
+            ).apply(instance, ::AspectsCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonFriendship = pokemon.friendship
-        return range.contains(pokemonFriendship)
+        return if (all) aspects.all(pokemon.aspects::contains) else aspects.any(pokemon.aspects::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.FRIENDSHIP
+    override fun getType(): LootItemConditionType = LootConditions.ASPECTS
 }

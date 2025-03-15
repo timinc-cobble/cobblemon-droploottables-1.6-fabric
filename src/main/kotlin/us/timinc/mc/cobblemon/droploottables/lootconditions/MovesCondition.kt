@@ -8,29 +8,29 @@ import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
-class PokemonLabelCondition(
-    val labels: List<String>,
+class MovesCondition(
+    val moves: List<String>,
     val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val LABELS = "labels"
+            const val MOVES = "moves"
             const val ALL = "all"
         }
 
-        val CODEC: MapCodec<PokemonLabelCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<MovesCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.listOf().fieldOf(KEYS.LABELS).forGetter(PokemonLabelCondition::labels),
-                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(PokemonLabelCondition::all)
-            ).apply(instance, ::PokemonLabelCondition)
+                Codec.STRING.listOf().fieldOf(KEYS.MOVES).forGetter(MovesCondition::moves),
+                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(MovesCondition::all)
+            ).apply(instance, ::MovesCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonLabels = pokemon.form.labels
-        return if (all) labels.all(pokemonLabels::contains) else labels.any(pokemonLabels::contains)
+        val pokemonMoveNames = pokemon.moveSet.map { it.name }
+        return if (all) moves.all(pokemonMoveNames::contains) else moves.any(pokemonMoveNames::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.POKEMON_LABEL
+    override fun getType(): LootItemConditionType = LootConditions.MOVES
 }

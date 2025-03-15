@@ -15,18 +15,22 @@ object ReleaseDropper : AbstractFormDropper("release") {
         CobblemonEvents.POKEMON_RELEASED_EVENT_POST.subscribe(Priority.LOWEST) { event ->
             val level = event.player.level()
             if (level !is ServerLevel) return@subscribe
+            val player = event.player
+            val position = player.position()
+            val pokemon = event.pokemon
 
             val lootParams = LootParams(
                 level, mapOf(
-                    LootContextParams.ORIGIN to event.player.position(),
-                    LootContextParams.THIS_ENTITY to event.pokemon.entity,
-                    LootConditions.PARAMS.POKEMON_DETAILS to event.pokemon,
-                    LootContextParams.DIRECT_ATTACKING_ENTITY to event.player
-                ), mapOf(), event.player.luck
+                    LootContextParams.ORIGIN to position,
+                    LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
+                    LootConditions.PARAMS.RELEVANT_PLAYER to player,
+                    LootContextParams.DIRECT_ATTACKING_ENTITY to player,
+                ), mapOf(), player.luck
             )
+            val context = FormDropContext(pokemon.form)
             val drops = getDrops(
                 lootParams,
-                FormDropContext(event.pokemon.form)
+                context
             )
 
             drops.forEach(event.player::giveOrDropItemStack)

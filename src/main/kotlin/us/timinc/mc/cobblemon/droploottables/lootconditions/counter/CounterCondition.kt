@@ -3,36 +3,35 @@ package us.timinc.mc.cobblemon.droploottables.lootconditions.counter
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.storage.loot.LootContext
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.counter.CounterMod
 import us.timinc.mc.cobblemon.counter.api.CounterType
 import us.timinc.mc.cobblemon.counter.extensions.getCounterManager
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
+import us.timinc.mc.cobblemon.droploottables.toIntRange
 
 class CounterCondition(
-    val min: Int,
+    val range: IntRange,
     val counterType: CounterType,
     val streak: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val MIN = "min"
+            const val RANGE = "range"
             const val COUNTER_TYPE = "counter_type"
             const val STREAK = "streak"
         }
 
         val CODEC: MapCodec<CounterCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.INT.fieldOf(KEYS.MIN).forGetter(CounterCondition::min),
+                Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() },
                 Codec.STRING.fieldOf(KEYS.COUNTER_TYPE).forGetter { it.counterType.type },
                 Codec.BOOL.fieldOf(KEYS.STREAK).orElse(false).forGetter(CounterCondition::streak)
-            ).apply(instance) { min, counterType, streak ->
+            ).apply(instance) { range, counterType, streak ->
                 CounterCondition(
-                    min,
+                    toIntRange(range),
                     CounterType.entries.find { it.type == counterType }
                         ?: throw Error("Counter type $counterType not found"),
                     streak
@@ -42,8 +41,7 @@ class CounterCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        val player = context.getParamOrNull(LootContextParams.DIRECT_ATTACKING_ENTITY) ?: return false
-        if (player !is ServerPlayer) return false
+        val player = context.getParamOrNull(LootConditions.PARAMS.RELEVANT_PLAYER) ?: return false
         val pokemonData = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
 
         val speciesId = pokemonData.species.resourceIdentifier
@@ -63,7 +61,7 @@ class CounterCondition(
                 manager.getCount(counterType, speciesId, formName)
             }
 
-        return value >= min
+        return range.contains(value)
     }
 
     override fun getType(): LootItemConditionType = CounterLootConditions.COUNT_CONDITION

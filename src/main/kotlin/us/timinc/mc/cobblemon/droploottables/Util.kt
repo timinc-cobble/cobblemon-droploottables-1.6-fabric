@@ -1,14 +1,24 @@
 package us.timinc.mc.cobblemon.droploottables
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.OriginalTrainerType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.math.FloatRange
+import net.minecraft.resources.ResourceLocation
 
 fun toIntRange(str: String): IntRange {
     val (start, end) = str.split("..")
 
     return try {
-        start.toInt()..end.toInt()
+        val actualStart = when (start.lowercase()) {
+            "min" -> Int.MIN_VALUE
+            else -> start.toInt()
+        }
+        val actualEnd = when (end.lowercase()) {
+            "max" -> Int.MAX_VALUE
+            else -> end.toInt()
+        }
+        actualStart..actualEnd
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not integers", e)
     }
@@ -18,7 +28,15 @@ fun toFloatRange(str: String): FloatRange {
     val (start, end) = str.split("..")
 
     return try {
-        FloatRange(start.toFloat(), end.toFloat())
+        val actualStart = when (start.lowercase()) {
+            "min" -> Float.MIN_VALUE
+            else -> start.toFloat()
+        }
+        val actualEnd = when (end.lowercase()) {
+            "max" -> Float.MAX_VALUE
+            else -> end.toFloat()
+        }
+        FloatRange(actualStart, actualEnd)
     } catch (e: NumberFormatException) {
         throw IllegalArgumentException("'$start' and/or '$end' is/are not Floats", e)
     }
@@ -29,3 +47,12 @@ fun toFloatRange(str: String): FloatRange {
 // have OTs is hopefully a sound idea.
 fun isActuallyWild(pokemon: Pokemon): Boolean =
     pokemon.isWild() && pokemon.originalTrainerType == OriginalTrainerType.NONE
+
+fun parseWithDefaultedCobblemonNamespace(string: String): ResourceLocation {
+    val split = string.split(":")
+    return when (split.size) {
+        1 -> ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, string)
+        2 -> ResourceLocation.parse(string)
+        else -> throw Error("Invalid resource location $string")
+    }
+}

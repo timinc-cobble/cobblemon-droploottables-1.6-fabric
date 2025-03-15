@@ -17,29 +17,33 @@ import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 object EvolutionDropper : AbstractFormDropper("evolve") {
     override fun load() {
         CobblemonEvents.EVOLUTION_COMPLETE.subscribe(Priority.LOWEST) { event ->
-            val dropperEntity = event.pokemon.entity
             val player = event.pokemon.getOwnerPlayer() ?: return@subscribe
-            val positionalEntity = dropperEntity ?: player
+            val pokemonEntity = event.pokemon.entity
+            val positionalEntity = pokemonEntity ?: player
             val level = positionalEntity.level()
             if (level !is ServerLevel) return@subscribe
             val position = positionalEntity.position()
-            val form = event.pokemon.form
+            val pokemon = event.pokemon
+            val form = pokemon.form
+            val evolution = event.evolution
 
             val lootParams = LootParams(
                 level,
                 mapOf(
                     LootContextParams.ORIGIN to position,
-                    LootContextParams.THIS_ENTITY to dropperEntity,
-                    LootConditions.PARAMS.POKEMON_DETAILS to event.pokemon,
-                    LootConditions.PARAMS.EVOLUTION to event.evolution
+                    LootContextParams.THIS_ENTITY to pokemonEntity,
+                    LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
+                    LootConditions.PARAMS.EVOLUTION to evolution,
+                    LootConditions.PARAMS.RELEVANT_PLAYER to player,
                 ),
                 mapOf(),
                 player.luck
             )
             val finalDrops: MutableList<ItemStack> = mutableListOf()
+            val context = FormDropContext(form)
             val tableDrops = getDrops(
                 lootParams,
-                FormDropContext(form)
+                context
             )
             finalDrops.addAll(tableDrops)
 
@@ -49,7 +53,7 @@ object EvolutionDropper : AbstractFormDropper("evolve") {
                     if (drop is ItemDropEntry) {
                         val item = level.registryAccess().registryOrThrow(Registries.ITEM).get(drop.item)
                         if (item === null) {
-                            debug("Unable to drop item ${drop.item}")
+                            debug("Unable to drop item ${drop.item}", true)
                             return@mapNotNull null
                         }
                         return@mapNotNull ItemStack(item, drop.quantityRange?.random() ?: drop.quantity)

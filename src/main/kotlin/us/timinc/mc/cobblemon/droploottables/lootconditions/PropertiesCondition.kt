@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
-class PokemonPropertiesLootCondition(
+class PropertiesCondition(
     val properties: String,
 ) : LootItemCondition {
     companion object {
@@ -17,20 +17,18 @@ class PokemonPropertiesLootCondition(
             const val PROPERTIES = "properties"
         }
 
-        val CODEC: MapCodec<PokemonPropertiesLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<PropertiesCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties }
-            ).apply(instance) { PokemonPropertiesLootCondition(it) }
+            ).apply(instance, ::PropertiesCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
+        val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
         val properties: PokemonProperties = PokemonProperties.parse(properties)
         return properties.matches(pokemon)
     }
 
-    override fun getType(): LootItemConditionType {
-        return LootConditions.POKEMON_PROPERTIES
-    }
+    override fun getType(): LootItemConditionType = LootConditions.PROPERTIES
 }

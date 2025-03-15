@@ -9,7 +9,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.toIntRange
 
-class PokemonLevelLootCondition(
+class DynamaxLevelCondition(
     val range: IntRange,
 ) : LootItemCondition {
     companion object {
@@ -17,20 +17,18 @@ class PokemonLevelLootCondition(
             const val RANGE = "range"
         }
 
-        val CODEC: MapCodec<PokemonLevelLootCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<DynamaxLevelCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.fieldOf(KEYS.RANGE).forGetter { it.range.toString() }
-            ).apply(instance) { PokemonLevelLootCondition(toIntRange(it)) }
+            ).apply(instance) { DynamaxLevelCondition(toIntRange(it)) }
         }
     }
 
     override fun test(context: LootContext): Boolean {
-        val pokemon: Pokemon = context.getParam(LootConditions.PARAMS.POKEMON_DETAILS)!!
-        val pokemonLevel = pokemon.level
+        val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
+        val pokemonLevel = pokemon.dmaxLevel
         return range.contains(pokemonLevel)
     }
 
-    override fun getType(): LootItemConditionType {
-        return LootConditions.POKEMON_LEVEL
-    }
+    override fun getType(): LootItemConditionType = LootConditions.DYNAMAX_LEVEL
 }
