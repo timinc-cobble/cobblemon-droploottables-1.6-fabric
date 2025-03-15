@@ -1,6 +1,5 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
@@ -8,29 +7,27 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
-import us.timinc.mc.cobblemon.droploottables.extensions.isInvalid
+import us.timinc.mc.cobblemon.droploottables.extensions.hasHiddenAbility
 
-class PropertiesCondition(
-    val properties: String,
+class HiddenAbilityCondition(
+    val value: Boolean = true,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val PROPERTIES = "properties"
+            const val VALUE = "value"
         }
 
-        val CODEC: MapCodec<PropertiesCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<HiddenAbilityCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties }
-            ).apply(instance, ::PropertiesCondition)
+                Codec.BOOL.fieldOf(KEYS.VALUE).orElse(true).forGetter(HiddenAbilityCondition::value)
+            ).apply(instance, ::HiddenAbilityCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val properties: PokemonProperties = PokemonProperties.parse(properties)
-        return properties.matches(pokemon)
+        return pokemon.hasHiddenAbility() == value
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.PROPERTIES
+    override fun getType(): LootItemConditionType = LootConditions.HIDDEN_ABILITY
 }

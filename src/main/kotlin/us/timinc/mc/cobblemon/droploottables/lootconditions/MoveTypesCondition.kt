@@ -9,30 +9,30 @@ import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
-class ElementalTypeCondition(
-    val elements: List<ElementalType>,
+class MoveTypesCondition(
+    val moveTypes: List<ElementalType>,
     val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val ELEMENTAL_TYPE = "elements"
+            const val MOVE_TYPES = "move_types"
             const val ALL = "all"
         }
 
-        val CODEC: MapCodec<ElementalTypeCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<MoveTypesCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                ElementalType.BY_STRING_CODEC.listOf().fieldOf(KEYS.ELEMENTAL_TYPE)
-                    .forGetter(ElementalTypeCondition::elements),
-                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(ElementalTypeCondition::all)
-            ).apply(instance, ::ElementalTypeCondition)
+                ElementalType.BY_STRING_CODEC.listOf().fieldOf(KEYS.MOVE_TYPES)
+                    .forGetter(MoveTypesCondition::moveTypes),
+                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(MoveTypesCondition::all)
+            ).apply(instance, ::MoveTypesCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonTypes = pokemon.types
-        return if (all) elements.all(pokemonTypes::contains) else elements.any(pokemonTypes::contains)
+        val pokemonMoveTypes = pokemon.moveSet.map { it.type }
+        return if (all) moveTypes.all(pokemonMoveTypes::contains) else moveTypes.any(pokemonMoveTypes::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.TYPE
+    override fun getType(): LootItemConditionType = LootConditions.MOVES
 }

@@ -1,8 +1,10 @@
 package us.timinc.mc.cobblemon.droploottables
 
+import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.OriginalTrainerType
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.math.FloatRange
+import net.minecraft.resources.ResourceLocation
 
 fun toIntRange(str: String): IntRange {
     val (start, end) = str.split("..")
@@ -45,3 +47,12 @@ fun toFloatRange(str: String): FloatRange {
 // have OTs is hopefully a sound idea.
 fun isActuallyWild(pokemon: Pokemon): Boolean =
     pokemon.isWild() && pokemon.originalTrainerType == OriginalTrainerType.NONE
+
+fun parseWithDefaultedCobblemonNamespace(string: String): ResourceLocation {
+    val split = string.split(":")
+    return when (split.size) {
+        1 -> ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, string)
+        2 -> ResourceLocation.parse(string)
+        else -> throw Error("Invalid resource location $string")
+    }
+}

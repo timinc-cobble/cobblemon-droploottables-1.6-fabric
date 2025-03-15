@@ -1,6 +1,5 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
-import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
@@ -8,29 +7,30 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
-import us.timinc.mc.cobblemon.droploottables.extensions.isInvalid
 
-class PropertiesCondition(
-    val properties: String,
+class MovesCondition(
+    val moves: List<String>,
+    val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val PROPERTIES = "properties"
+            const val MOVES = "moves"
+            const val ALL = "all"
         }
 
-        val CODEC: MapCodec<PropertiesCondition> = RecordCodecBuilder.mapCodec { instance ->
+        val CODEC: MapCodec<MovesCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.fieldOf(KEYS.PROPERTIES).forGetter { it.properties }
-            ).apply(instance, ::PropertiesCondition)
+                Codec.STRING.listOf().fieldOf(KEYS.MOVES).forGetter(MovesCondition::moves),
+                Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(MovesCondition::all)
+            ).apply(instance, ::MovesCondition)
         }
     }
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val properties: PokemonProperties = PokemonProperties.parse(properties)
-        return properties.matches(pokemon)
+        val pokemonMoveNames = pokemon.moveSet.map { it.name }
+        return if (all) moves.all(pokemonMoveNames::contains) else moves.any(pokemonMoveNames::contains)
     }
 
-    override fun getType(): LootItemConditionType = LootConditions.PROPERTIES
+    override fun getType(): LootItemConditionType = LootConditions.MOVES
 }

@@ -3,7 +3,6 @@ package us.timinc.mc.cobblemon.droploottables.droppers
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
-import com.cobblemon.mod.common.pokemon.activestate.SentOutState
 import com.cobblemon.mod.common.util.server
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.item.ItemEntity
