@@ -30,8 +30,8 @@ class MoveTypesCondition(
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        val pokemonMoveNames = pokemon.moveSet.map { it.type }
-        return if (all) moveTypes.all(pokemonMoveNames::contains) else moveTypes.any(pokemonMoveNames::contains)
+        val pokemonMoveTypes = pokemon.moveSet.map { it.type }
+        return if (all) moveTypes.all(pokemonMoveTypes::contains) else moveTypes.any(pokemonMoveTypes::contains)
     }
 
     override fun getType(): LootItemConditionType = LootConditions.MOVES
