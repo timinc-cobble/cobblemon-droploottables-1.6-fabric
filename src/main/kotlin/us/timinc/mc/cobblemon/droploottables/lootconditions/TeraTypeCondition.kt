@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import us.timinc.mc.cobblemon.droploottables.parseWithDefaultedCobblemonNamespace
 
 class TeraTypeCondition(
     val types: List<ResourceLocation>,
@@ -20,7 +21,7 @@ class TeraTypeCondition(
         val CODEC: MapCodec<TeraTypeCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.listOf().fieldOf(KEYS.TERA_TYPE).forGetter { it.types.map(ResourceLocation::toString) }
-            ).apply(instance) { TeraTypeCondition(it.map(ResourceLocation::parse)) }
+            ).apply(instance) { TeraTypeCondition(it.map(::parseWithDefaultedCobblemonNamespace)) }
         }
     }
 

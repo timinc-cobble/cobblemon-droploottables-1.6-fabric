@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import us.timinc.mc.cobblemon.droploottables.parseWithDefaultedCobblemonNamespace
 
 class CaughtBallCondition(
     val balls: List<ResourceLocation>,
@@ -20,7 +21,7 @@ class CaughtBallCondition(
         val CODEC: MapCodec<CaughtBallCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.listOf().fieldOf(KEYS.BALLS).forGetter { it.balls.map(ResourceLocation::toString) }
-            ).apply(instance) { CaughtBallCondition(it.map(ResourceLocation::parse)) }
+            ).apply(instance) { CaughtBallCondition(it.map(::parseWithDefaultedCobblemonNamespace)) }
         }
     }
 

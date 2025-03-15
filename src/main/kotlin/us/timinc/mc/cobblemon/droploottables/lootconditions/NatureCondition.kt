@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import us.timinc.mc.cobblemon.droploottables.parseWithDefaultedCobblemonNamespace
 
 class NatureCondition(
     val natures: List<ResourceLocation>,
@@ -20,7 +21,7 @@ class NatureCondition(
         val CODEC: MapCodec<NatureCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
                 Codec.STRING.listOf().fieldOf(KEYS.NATURES).forGetter { it.natures.map(ResourceLocation::toString) }
-            ).apply(instance) { NatureCondition(it.map(ResourceLocation::parse)) }
+            ).apply(instance) { NatureCondition(it.map(::parseWithDefaultedCobblemonNamespace)) }
         }
     }
 
