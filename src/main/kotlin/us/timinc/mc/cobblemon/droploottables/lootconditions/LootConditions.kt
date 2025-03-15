@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val HIDDEN_ABILITY: LootItemConditionType = LootItemConditionType(HiddenAbilityCondition.CODEC)
     val GENDER: LootItemConditionType = LootItemConditionType(GenderCondition.CODEC)
     val EV: LootItemConditionType = LootItemConditionType(EvCondition.CODEC)
     val IV: LootItemConditionType = LootItemConditionType(IvCondition.CODEC)
@@ -151,6 +152,11 @@ object LootConditions {
             BuiltInRegistries.LOOT_CONDITION_TYPE,
             DropLootTables.modIdentifier("gender"),
             GENDER
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("hidden_ability"),
+            HIDDEN_ABILITY
         )
     }
 }
