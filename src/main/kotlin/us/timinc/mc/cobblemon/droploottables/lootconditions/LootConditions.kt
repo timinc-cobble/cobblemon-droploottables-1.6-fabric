@@ -11,6 +11,17 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val STATUS: LootItemConditionType = LootItemConditionType(StatusCondition.CODEC)
+    val NICKNAME: LootItemConditionType = LootItemConditionType(NicknameCondition.CODEC)
+    val TERA_TYPE: LootItemConditionType = LootItemConditionType(TeraTypeCondition.CODEC)
+    val DYNAMAX_LEVEL: LootItemConditionType = LootItemConditionType(DynamaxLevelCondition.CODEC)
+    val GMAX: LootItemConditionType = LootItemConditionType(GmaxCondition.CODEC)
+    val TRADEABLE: LootItemConditionType = LootItemConditionType(TradeableCondition.CODEC)
+    val MOVE_TYPES: LootItemConditionType = LootItemConditionType(MoveTypesCondition.CODEC)
+    val MOVES: LootItemConditionType = LootItemConditionType(MovesCondition.CODEC)
+    val ORIGINAL_TRAINER: LootItemConditionType = LootItemConditionType(OriginalTrainerCondition.CODEC)
+    val HELD_ITEM: LootItemConditionType = LootItemConditionType(HeldItemCondition.CODEC)
+    val ASPECTS: LootItemConditionType = LootItemConditionType(AspectsCondition.CODEC)
     val PERSISTENT_DATA_RANGE: LootItemConditionType = LootItemConditionType(PersistentDataRangeCondition.CODEC)
     val PERSISTENT_DATA: LootItemConditionType = LootItemConditionType(PersistentDataCondition.CODEC)
     val FRIENDSHIP: LootItemConditionType = LootItemConditionType(FriendshipLevelCondition.CODEC)
@@ -61,6 +72,61 @@ object LootConditions {
             BuiltInRegistries.LOOT_CONDITION_TYPE,
             DropLootTables.modIdentifier("persistent_data_range"),
             PERSISTENT_DATA_RANGE
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("aspects"),
+            ASPECTS
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("held_item"),
+            HELD_ITEM
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("original_trainer"),
+            ORIGINAL_TRAINER
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("moves"),
+            MOVES
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("move_types"),
+            MOVE_TYPES
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("tradeable"),
+            TRADEABLE
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("gmax"),
+            GMAX
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("dynamax_level"),
+            DYNAMAX_LEVEL
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("tera_type"),
+            TERA_TYPE
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("nickname"),
+            NICKNAME
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("status"),
+            STATUS
         )
     }
 }
