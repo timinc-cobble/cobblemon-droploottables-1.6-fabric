@@ -9,8 +9,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class GenderCondition(
-    val genders: List<String>
-): LootItemCondition {
+    val genders: List<String>,
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val GENDERS = "genders"

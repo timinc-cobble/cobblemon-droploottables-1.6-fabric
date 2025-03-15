@@ -11,7 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class ElementalTypeCondition(
     val elements: List<ElementalType>,
-    val all: Boolean = false
+    val all: Boolean = false,
 ) : LootItemCondition {
     companion object {
         object KEYS {

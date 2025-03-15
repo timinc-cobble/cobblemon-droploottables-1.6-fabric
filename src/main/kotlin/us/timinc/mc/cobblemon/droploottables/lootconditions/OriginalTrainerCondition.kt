@@ -10,7 +10,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class OriginalTrainerCondition(
     val name: String,
-): LootItemCondition {
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val NAME = "name"

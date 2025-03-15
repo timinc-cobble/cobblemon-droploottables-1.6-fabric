@@ -1,6 +1,5 @@
 package us.timinc.mc.cobblemon.droploottables.lootconditions
 
-import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
@@ -11,8 +10,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.extensions.hasHiddenAbility
 
 class HiddenAbilityCondition(
-    val value: Boolean = true
-): LootItemCondition {
+    val value: Boolean = true,
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val VALUE = "value"

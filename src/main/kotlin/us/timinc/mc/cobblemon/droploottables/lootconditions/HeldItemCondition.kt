@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class HeldItemCondition(
     val item: String,
-): LootItemCondition {
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val ITEM = "item"

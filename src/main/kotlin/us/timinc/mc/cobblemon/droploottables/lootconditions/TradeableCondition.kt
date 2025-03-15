@@ -9,8 +9,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class TradeableCondition(
-    val value: Boolean = true
-): LootItemCondition {
+    val value: Boolean = true,
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val VALUE = "value"

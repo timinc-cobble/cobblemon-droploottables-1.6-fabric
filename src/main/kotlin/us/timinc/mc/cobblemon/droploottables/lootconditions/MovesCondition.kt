@@ -10,8 +10,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class MovesCondition(
     val moves: List<String>,
-    val all: Boolean = false
-): LootItemCondition {
+    val all: Boolean = false,
+) : LootItemCondition {
     companion object {
         object KEYS {
             const val MOVES = "moves"
