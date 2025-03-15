@@ -8,8 +8,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.world.level.storage.loot.LootContext
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
-import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
-import us.timinc.mc.cobblemon.droploottables.extensions.isInvalid
 
 class PropertiesCondition(
     val properties: String,

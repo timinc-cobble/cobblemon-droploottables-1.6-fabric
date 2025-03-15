@@ -8,5 +8,6 @@ object Droppers {
         FossilRevivedDropper.load()
         EvolutionDropper.load()
         PeriodicDropper.load()
+        EggHatchingDropper.load()
     }
 }
