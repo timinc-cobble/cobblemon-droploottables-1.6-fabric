@@ -11,6 +11,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val EV: LootItemConditionType = LootItemConditionType(EvCondition.CODEC)
+    val IV: LootItemConditionType = LootItemConditionType(IvCondition.CODEC)
     val ABILITY: LootItemConditionType = LootItemConditionType(AbilityCondition.CODEC)
     val STATUS: LootItemConditionType = LootItemConditionType(StatusCondition.CODEC)
     val NICKNAME: LootItemConditionType = LootItemConditionType(NicknameCondition.CODEC)
@@ -133,6 +135,16 @@ object LootConditions {
             BuiltInRegistries.LOOT_CONDITION_TYPE,
             DropLootTables.modIdentifier("ability"),
             ABILITY
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("ev"),
+            EV
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("iv"),
+            IV
         )
     }
 }

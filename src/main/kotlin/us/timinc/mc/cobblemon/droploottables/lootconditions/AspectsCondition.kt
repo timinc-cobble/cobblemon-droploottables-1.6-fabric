@@ -9,18 +9,18 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 
 class AspectsCondition(
-    val keys: List<String>,
+    val aspects: List<String>,
     val all: Boolean = false
 ) : LootItemCondition {
     companion object {
         object KEYS {
-            const val KEY = "keys"
+            const val ASPECTS = "aspects"
             const val ALL = "all"
         }
 
         val CODEC: MapCodec<AspectsCondition> = RecordCodecBuilder.mapCodec { instance ->
             instance.group(
-                Codec.STRING.listOf().fieldOf(KEYS.KEY).forGetter(AspectsCondition::keys),
+                Codec.STRING.listOf().fieldOf(KEYS.ASPECTS).forGetter(AspectsCondition::aspects),
                 Codec.BOOL.fieldOf(KEYS.ALL).orElse(false).forGetter(AspectsCondition::all),
             ).apply(instance, ::AspectsCondition)
         }
@@ -28,7 +28,7 @@ class AspectsCondition(
 
     override fun test(context: LootContext): Boolean {
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
-        return if (all) keys.all(pokemon.aspects::contains) else keys.any(pokemon.aspects::contains)
+        return if (all) aspects.all(pokemon.aspects::contains) else aspects.any(pokemon.aspects::contains)
     }
 
     override fun getType(): LootItemConditionType = LootConditions.ASPECTS
