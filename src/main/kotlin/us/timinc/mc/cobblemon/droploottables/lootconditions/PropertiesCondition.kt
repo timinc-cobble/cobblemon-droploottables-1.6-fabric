@@ -27,13 +27,6 @@ class PropertiesCondition(
     }
 
     override fun test(context: LootContext): Boolean {
-        if (PokemonProperties.parse(properties).isInvalid()) {
-            debug(
-                "The PokemonProperties loot condition with the properties value of '$properties' is invalid and will match all Pokemon.",
-                true
-            )
-        }
-
         val pokemon: Pokemon = context.getParamOrNull(LootConditions.PARAMS.POKEMON_DETAILS) ?: return false
         val properties: PokemonProperties = PokemonProperties.parse(properties)
         return properties.matches(pokemon)
