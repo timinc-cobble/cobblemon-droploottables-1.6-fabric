@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val SHINY: LootItemConditionType = LootItemConditionType(ShinyCondition.CODEC)
     val CAUGHT_BALL: LootItemConditionType = LootItemConditionType(CaughtBallCondition.CODEC)
     val NATURE: LootItemConditionType = LootItemConditionType(NatureCondition.CODEC)
     val HIDDEN_ABILITY: LootItemConditionType = LootItemConditionType(HiddenAbilityCondition.CODEC)
@@ -169,6 +170,11 @@ object LootConditions {
             BuiltInRegistries.LOOT_CONDITION_TYPE,
             DropLootTables.modIdentifier("caught_ball"),
             CAUGHT_BALL
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("shiny"),
+            SHINY
         )
     }
 }
