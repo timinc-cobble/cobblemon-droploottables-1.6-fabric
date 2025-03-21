@@ -12,7 +12,7 @@ abstract class AbstractFormDropper(dropType: String, modId: String = MOD_ID) :
     open fun getFormDropId(form: FormData): ResourceLocation =
         ResourceLocation.fromNamespaceAndPath(
             modId,
-            "$dropType/${form.species.resourceIdentifier.path}${if (form.name != "Normal") "/${form.name.lowercase()}" else ""}"
+            "$dropType/${form.species.resourceIdentifier.path}${if (form.name != "Normal") "/${form.name.lowercase().replace(Regex("[^a-z0-9/._-]"), "")}" else ""}"
         )
 
     open fun getAllDropId(): ResourceLocation =
