@@ -10,5 +10,6 @@ object Droppers {
         PeriodicDropper.load()
         EggHatchingDropper.load()
         StarterChosenDropper.load()
+        ScannedDropper.load()
     }
 }
