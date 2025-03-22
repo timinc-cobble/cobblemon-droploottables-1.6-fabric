@@ -54,7 +54,8 @@ object KoDropper : AbstractFormDropper("ko") {
             finalDrops.addAll(tableDrops)
 
             if (!lootTableExists(level, getFormDropId(form)) && config.useCobblemonDropsIfOverrideNotPresent) {
-                val cobbleDrops = form.drops.getDrops(pokemon = event.pokemon)
+                val cobbleDropTable = event.pokemon.entity?.drops ?: event.pokemon.form.drops
+                val cobbleDrops = cobbleDropTable.getDrops(pokemon = event.pokemon)
                 finalDrops.addAll(cobbleDrops.mapNotNull { drop ->
                     if (drop is ItemDropEntry) {
                         val item = level.registryAccess().registryOrThrow(Registries.ITEM).get(drop.item)
