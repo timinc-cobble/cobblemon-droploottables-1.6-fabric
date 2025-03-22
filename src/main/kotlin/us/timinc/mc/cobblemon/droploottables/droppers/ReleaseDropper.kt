@@ -24,7 +24,6 @@ object ReleaseDropper : AbstractFormDropper("release") {
                     LootContextParams.ORIGIN to position,
                     LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
                     LootConditions.PARAMS.RELEVANT_PLAYER to player,
-                    LootContextParams.DIRECT_ATTACKING_ENTITY to player,
                 ), mapOf(), player.luck
             )
             val context = FormDropContext(pokemon.form)
