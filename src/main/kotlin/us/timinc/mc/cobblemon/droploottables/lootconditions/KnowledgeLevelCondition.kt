@@ -36,7 +36,8 @@ class KnowledgeLevelCondition(
             return storedKnowledgeLevel.ordinal >= knowledge.ordinal
         }
         val player: ServerPlayer = context.getParamOrNull(LootConditions.PARAMS.RELEVANT_PLAYER) ?: return false
-        val knowledgeLevel = player.getPokedexManager().getSpeciesRecord(pokemon.species.resourceIdentifier)?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
+        val knowledgeLevel = player.getPokedexManager().getSpeciesRecord(pokemon.species.resourceIdentifier)
+            ?.getFormRecord(pokemon.form.name)?.knowledge ?: PokedexEntryProgress.NONE
         return knowledgeLevel.ordinal >= knowledge.ordinal
     }
 
