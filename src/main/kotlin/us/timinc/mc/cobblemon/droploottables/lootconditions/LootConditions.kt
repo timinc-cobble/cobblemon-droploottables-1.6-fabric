@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import us.timinc.mc.cobblemon.droploottables.DropLootTables
 
 object LootConditions {
+    val KNOWLEDGE_LEVEL: LootItemConditionType = LootItemConditionType(KnowledgeLevelCondition.CODEC)
     val SHINY: LootItemConditionType = LootItemConditionType(ShinyCondition.CODEC)
     val CAUGHT_BALL: LootItemConditionType = LootItemConditionType(CaughtBallCondition.CODEC)
     val NATURE: LootItemConditionType = LootItemConditionType(NatureCondition.CODEC)
@@ -175,6 +176,11 @@ object LootConditions {
             BuiltInRegistries.LOOT_CONDITION_TYPE,
             DropLootTables.modIdentifier("shiny"),
             SHINY
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE,
+            DropLootTables.modIdentifier("knowledge_level"),
+            KNOWLEDGE_LEVEL
         )
     }
 }
