@@ -6,6 +6,7 @@ import net.minecraft.world.level.storage.loot.LootParams
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import us.timinc.mc.cobblemon.droploottables.api.droppers.AbstractFormDropper
 import us.timinc.mc.cobblemon.droploottables.api.droppers.FormDropContext
+import us.timinc.mc.cobblemon.droploottables.events.DropLootTablesEventHandlers
 import us.timinc.mc.cobblemon.droploottables.lootconditions.LootConditions
 
 object CaptureDropper : AbstractFormDropper("capture") {
@@ -39,6 +40,10 @@ object CaptureDropper : AbstractFormDropper("capture") {
             )
 
             giveDropsToPlayer(drops, player)
+
+            if (pokemon.persistentData.contains(DropLootTablesEventHandlers.PRE_CATCH_PLAYER_KNOWLEDGE.toString())) {
+                pokemon.persistentData.remove(DropLootTablesEventHandlers.PRE_CATCH_PLAYER_KNOWLEDGE.toString())
+            }
         }
     }
 }

@@ -5,9 +5,11 @@ import com.cobblemon.mod.common.api.drop.ItemDropEntry
 import net.minecraft.core.registries.Registries
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.TamableAnimal
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.storage.loot.LootParams
+import net.minecraft.world.level.storage.loot.parameters.LootContextParam
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.config
 import us.timinc.mc.cobblemon.droploottables.DropLootTables.debug
@@ -27,22 +29,31 @@ object KoDropper : AbstractFormDropper("ko") {
             val wasInBattle = pokemonEntity.isBattling
             val attacker = pokemonEntity.lastAttacker
             val directAttackingEntity = pokemonEntity.lastDamageSource
-            val attackingPlayer = attacker as? ServerPlayer
+            val attackingPlayerOrPet =
+                (attacker as? ServerPlayer) ?: (attacker as? TamableAnimal).takeIf { it?.isTame ?: false }
             val pokemon = event.pokemon
             val form = pokemon.form
 
+            val lootContextMap: MutableMap<LootContextParam<out Any>, Any?> = mutableMapOf(
+                LootContextParams.ORIGIN to position,
+                LootContextParams.THIS_ENTITY to pokemonEntity,
+                LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
+                LootConditions.PARAMS.WAS_IN_BATTLE to wasInBattle,
+                LootConditions.PARAMS.RELEVANT_PLAYER to player,
+            )
+            if (attacker != null) {
+                lootContextMap[LootContextParams.ATTACKING_ENTITY] = attacker
+            }
+            if (directAttackingEntity != null) {
+                lootContextMap[LootContextParams.DIRECT_ATTACKING_ENTITY] = directAttackingEntity
+            }
+            if (attackingPlayerOrPet != null) {
+                lootContextMap[LootContextParams.LAST_DAMAGE_PLAYER] = attackingPlayerOrPet
+            }
+
             val lootParams = LootParams(
                 level,
-                mapOf(
-                    LootContextParams.ORIGIN to position,
-                    LootContextParams.THIS_ENTITY to pokemonEntity,
-                    LootConditions.PARAMS.POKEMON_DETAILS to pokemon,
-                    LootConditions.PARAMS.WAS_IN_BATTLE to wasInBattle,
-                    LootConditions.PARAMS.RELEVANT_PLAYER to player,
-                    LootContextParams.ATTACKING_ENTITY to attacker,
-                    LootContextParams.DIRECT_ATTACKING_ENTITY to directAttackingEntity,
-                    LootContextParams.LAST_DAMAGE_PLAYER to attackingPlayer
-                ),
+                lootContextMap,
                 mapOf(),
                 player?.luck ?: 0F
             )
@@ -54,7 +65,8 @@ object KoDropper : AbstractFormDropper("ko") {
             finalDrops.addAll(tableDrops)
 
             if (!lootTableExists(level, getFormDropId(form)) && config.useCobblemonDropsIfOverrideNotPresent) {
-                val cobbleDrops = form.drops.getDrops(pokemon = event.pokemon)
+                val cobbleDropTable = event.pokemon.entity?.drops ?: event.pokemon.form.drops
+                val cobbleDrops = cobbleDropTable.getDrops(pokemon = event.pokemon)
                 finalDrops.addAll(cobbleDrops.mapNotNull { drop ->
                     if (drop is ItemDropEntry) {
                         val item = level.registryAccess().registryOrThrow(Registries.ITEM).get(drop.item)

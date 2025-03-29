@@ -9,5 +9,8 @@ object Droppers {
         EvolutionDropper.load()
         PeriodicDropper.load()
         EggHatchingDropper.load()
+        StarterChosenDropper.load()
+        ScannedDropper.load()
+        CombatVictoryDropper.load()
     }
 }
