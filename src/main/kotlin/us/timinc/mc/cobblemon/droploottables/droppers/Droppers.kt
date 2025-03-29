@@ -11,5 +11,6 @@ object Droppers {
         EggHatchingDropper.load()
         StarterChosenDropper.load()
         ScannedDropper.load()
+        CombatVictoryDropper.load()
     }
 }
