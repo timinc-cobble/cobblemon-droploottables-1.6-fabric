@@ -28,7 +28,7 @@ object KoDropper : AbstractFormDropper("ko") {
             val position = pokemonEntity.position()
             val wasInBattle = pokemonEntity.isBattling
             val attacker = pokemonEntity.lastAttacker
-            val directAttackingEntity = pokemonEntity.lastDamageSource
+            val directAttackingEntity = pokemonEntity.lastDamageSource?.entity
             val attackingPlayerOrPet =
                 (attacker as? ServerPlayer) ?: (attacker as? TamableAnimal).takeIf { it?.isTame ?: false }
             val pokemon = event.pokemon
