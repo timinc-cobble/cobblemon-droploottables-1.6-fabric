@@ -37,6 +37,7 @@ object LootConditions {
     val PROPERTIES: LootItemConditionType = LootItemConditionType(PropertiesCondition.CODEC)
     val LEVEL: LootItemConditionType = LootItemConditionType(LevelCondition.CODEC)
     val TYPE: LootItemConditionType = LootItemConditionType(ElementalTypeCondition.CODEC)
+    val PRIMARY_TYPE: LootItemConditionType = LootItemConditionType(PrimaryElementalTypeCondition.CODEC)
     val WAS_IN_BATTLE: LootItemConditionType = LootItemConditionType(WasInBattleCondition.CODEC)
     val LABEL: LootItemConditionType = LootItemConditionType(LabelCondition.CODEC)
     val EGG_GROUP: LootItemConditionType = LootItemConditionType(EggGroupCondition.CODEC)
@@ -61,6 +62,9 @@ object LootConditions {
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("type"), TYPE
+        )
+        Registry.register(
+            BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("primary_type"), PRIMARY_TYPE
         )
         Registry.register(
             BuiltInRegistries.LOOT_CONDITION_TYPE, DropLootTables.modIdentifier("was_in_battle"), WAS_IN_BATTLE
