@@ -1,0 +1,1 @@
+This project is now archived as I've moved on to a multiplatform layout, rather than this lame split between fabric and forge/neoforge I've been doing. https://github.com/timinc-cobble/cobblemon-drop-loot-tables
